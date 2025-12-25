@@ -20,12 +20,11 @@
 	}: Props = $props();
 
 	import { page } from '$app/stores';
-	import { PUBLIC_SITE_URL } from '$env/static/public';
 
 	const fullTitle = title.includes('Rune Roost') ? title : `${title} | Rune Roost`;
 	
-	// Build base URL from environment or current page
-	const baseUrl = PUBLIC_SITE_URL || $page.url.origin;
+	// Build base URL from current page
+	const baseUrl = $page.url.origin;
 	
 	// Build full canonical URL
 	const canonicalUrl = url ? (url.startsWith('http') ? url : `${baseUrl}${url}`) : `${baseUrl}${$page.url.pathname}`;
