@@ -1,9 +1,7 @@
-import { PUBLIC_SITE_URL } from '$env/static/public';
-
 export const prerender = true;
 
 export async function GET({ url }) {
-	const website = PUBLIC_SITE_URL || url.origin || 'http://localhost:5173';
+	const website = url.origin;
 	
 	// Page definitions for the sitemap
 	const pages = [
