@@ -7,4 +7,4 @@ Allow: /
 # Disallow: /api/
 
 # Sitemap location (update with your actual domain after deployment)
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://which-encrypt.vafe.net/sitemap.xml

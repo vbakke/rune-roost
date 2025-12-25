@@ -2,55 +2,12 @@
 	import '../../app.css';
 	import { goto } from '$app/navigation';
 	import SEO from '$lib/components/SEO.svelte';
-
-	interface SkillNode {
-		id: string;
-		title: string;
-		description: string;
-		color: string;
-		locked: boolean;
-		position: { x: number; y: number };
-	}
-
-	const skills: SkillNode[] = [
-		{
-			id: 'center',
-			title: 'Start',
-			description: 'Begin your encryption journey',
-			color: '#60a5fa',
-			locked: false,
-			position: { x: 50, y: 50 }
-		},
-		{
-			id: 'symmetric',
-			title: 'Symmetric Encryption',
-			description: 'Sharing secret keys',
-			color: '#34d399',
-			locked: false,
-			position: { x: 20, y: 20 }
-		},
-		{
-			id: 'asymmetric',
-			title: 'Asymmetric Encryption',
-			description: 'Public and private keys',
-			color: '#a78bfa',
-			locked: false,
-			position: { x: 80, y: 20 }
-		},
-		{
-			id: 'hashing',
-			title: 'Hashing',
-			description: 'Not encryption, but often confused',
-			color: '#f472b6',
-			locked: false,
-			position: { x: 50, y: 85 }
-		}
-	];
+	import { skills, realmColors, type SkillNode } from '$lib/data/skills';
 
 	let selectedSkill: SkillNode | null = null;
 
 	function selectSkill(skill: SkillNode) {
-		if (!skill.locked) {
+		if (skill.state !== 'INVISIBLE') {
 			selectedSkill = skill;
 		}
 	}
@@ -62,6 +19,10 @@
 
 	function goBack() {
 		goto('/');
+	}
+
+	function closePanel() {
+		selectedSkill = null;
 	}
 
 	const structuredData = {
@@ -115,55 +76,60 @@
 
 	<div class="skill-tree-container">
 		<svg class="connection-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
-			<!-- Lines connecting nodes -->
-			<line x1="50" y1="50" x2="20" y2="20" stroke="#60a5fa" stroke-width="0.3" opacity="0.5" />
-			<line x1="50" y1="50" x2="80" y2="20" stroke="#a78bfa" stroke-width="0.3" opacity="0.5" />
-			<line x1="50" y1="50" x2="50" y2="85" stroke="#f472b6" stroke-width="0.3" opacity="0.5" />
+			<!-- Lines connecting center to nodes, forming triangle -->
+			<line x1="50" y1="45" x2="15" y2="15" stroke={realmColors.SYMMETRIC} stroke-width="0.3" opacity="0.5" />
+			<line x1="50" y1="45" x2="85" y2="15" stroke={realmColors.ASYMMETRIC} stroke-width="0.3" opacity="0.5" />
+			<line x1="50" y1="45" x2="50" y2="85" stroke={realmColors.HASHING} stroke-width="0.3" opacity="0.5" />
 		</svg>
 
 		<div class="skill-nodes">
 			{#each skills as skill}
-				<button
-					class="skill-node"
-					class:locked={skill.locked}
-					class:selected={selectedSkill?.id === skill.id}
-					style="left: {skill.position.x}%; top: {skill.position.y}%; --node-color: {skill.color}"
-					onclick={() => selectSkill(skill)}
-				>
-					<div class="node-circle">
-						{#if skill.locked}
-							<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-								<rect x="7" y="11" width="10" height="9" rx="1" stroke="currentColor" stroke-width="2"/>
-								<path d="M9 11V7a3 3 0 0 1 6 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-							</svg>
-						{:else if skill.id === 'center'}
-							<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-								<circle cx="12" cy="12" r="3" fill="currentColor"/>
-							</svg>
-						{:else}
-							<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-								<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
-							</svg>
-						{/if}
-					</div>
-					<div class="node-label">{skill.title}</div>
-				</button>
+				{#if skill.state !== 'INVISIBLE'}
+					<button
+						class="skill-node"
+						class:learnt={skill.state === 'LEARNT'}
+						class:can-learn={skill.state === 'CAN_LEARN'}
+						class:cannot-learn={skill.state === 'CANNOT_LEARN'}
+						class:selected={selectedSkill?.id === skill.id}
+						style="left: {skill.position.x}%; top: {skill.position.y}%; --node-color: {realmColors[skill.realm]}"
+						onclick={() => selectSkill(skill)}
+					>
+						<div class="node-circle">
+							{#if skill.state === 'CANNOT_LEARN'}
+								<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<rect x="7" y="11" width="10" height="9" rx="1" stroke="currentColor" stroke-width="2"/>
+									<path d="M9 11V7a3 3 0 0 1 6 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+								</svg>
+							{:else if skill.state === 'LEARNT'}
+								<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							{:else}
+								<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
+								</svg>
+							{/if}
+						</div>
+						<div class="node-label">{skill.title}</div>
+					</button>
+				{/if}
 			{/each}
 		</div>
 	</div>
 
+    <button class="panel-backdrop" onclick={closePanel} aria-label="Close panel"></button>
 	{#if selectedSkill}
 		<div class="skill-detail-panel">
 			<div class="panel-content">
-				<h2 class="skill-title" style="color: {selectedSkill.color}">{selectedSkill.title}</h2>
+				<h2 class="skill-title" style="color: {realmColors[selectedSkill.realm]}">{selectedSkill.title}</h2>
 				<p class="skill-description">{selectedSkill.description}</p>
 				
-				{#if selectedSkill.id === 'center'}
+				{#if selectedSkill.state === 'LEARNT'}
 					<p class="hint-text">Select a path to begin your learning journey</p>
-				{:else}
+				{:else if selectedSkill.state === 'CAN_LEARN'}
 					<button 
 						class="start-lesson-button"
-						style="background: linear-gradient(135deg, {selectedSkill.color}, {selectedSkill.color}dd)"
+						style="background: linear-gradient(135deg, {realmColors[selectedSkill.realm]}, {realmColors[selectedSkill.realm]}dd)"
 						onclick={() => startLesson(selectedSkill.id)}
 					>
 						Start Learning
@@ -171,6 +137,8 @@
 							<path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 						</svg>
 					</button>
+				{:else}
+					<p class="hint-text">Complete prerequisites to unlock this skill</p>
 				{/if}
 			</div>
 		</div>
@@ -223,7 +191,8 @@
 	.skill-tree-container {
 		flex: 1;
 		position: relative;
-		min-height: 400px;
+		min-height: 500px;
+		height: calc(100vh - 200px);
 		max-width: 800px;
 		width: 100%;
 		margin: 0 auto;
@@ -240,25 +209,28 @@
 	}
 
 	.skill-nodes {
-		position: relative;
+		position: absolute;
+		inset: 0;
 		width: 100%;
 		height: 100%;
-		z-index: 5;
+		z-index: 26;
+		pointer-events: none;
 	}
 
 	.skill-node {
 		position: absolute;
-		transform: translate(-50%, -50%);
+		transform: translate(-50%, -40px);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 0.5rem;
 		transition: all 0.3s ease;
 		cursor: pointer;
+		pointer-events: auto;
 	}
 
-	.skill-node:hover:not(.locked) {
-		transform: translate(-50%, -50%) scale(1.1);
+	.skill-node:hover:not(.cannot-learn) {
+		transform: translate(-50%, -40px) scale(1.1);
 	}
 
 	.skill-node.selected .node-circle {
@@ -288,17 +260,27 @@
 		border-radius: 50%;
 		background: var(--node-color);
 		opacity: 0;
+	}
+
+	/* Only CAN_LEARN nodes glow */
+	.skill-node.can-learn .node-circle::before {
 		animation: pulse-ring 2s ease-out infinite;
 	}
 
-	.skill-node:not(.locked):hover .node-circle::before {
+	.skill-node.can-learn:hover .node-circle::before {
 		animation: pulse-ring 1s ease-out infinite;
 	}
 
-	.skill-node.locked .node-circle {
+	/* CANNOT_LEARN nodes are dimmed */
+	.skill-node.cannot-learn .node-circle {
 		border-color: var(--border-color);
 		color: var(--border-color);
 		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+	}
+
+	/* LEARNT nodes have checkmark and subtle styling */
+	.skill-node.learnt .node-circle {
+		box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 	}
 
 	.node-label {
@@ -310,8 +292,16 @@
 		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 	}
 
-	.skill-node.locked .node-label {
+	.skill-node.cannot-learn .node-label {
 		color: var(--text-secondary);
+	}
+
+	.panel-backdrop {
+		position: fixed;
+		inset: 0;
+		background: transparent;
+		z-index: 25;
+		cursor: default;
 	}
 
 	.skill-detail-panel {
