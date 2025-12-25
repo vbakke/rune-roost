@@ -17,8 +17,8 @@
 	}
 
 	function startLesson(skillId: string) {
-		// TODO: Navigate to lesson page
-		console.log('Starting lesson for:', skillId);
+		// Navigate to læran page with realm anchor
+		goto(`/læran#${skillId}`);
 	}
 
 	function goBack() {
