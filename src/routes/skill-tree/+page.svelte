@@ -3,6 +3,10 @@
 	import { goto } from '$app/navigation';
 	import SEO from '$lib/components/SEO.svelte';
 	import { skills, realmColors, type SkillNode } from '$lib/data/skills';
+	import HarvestRune from '$lib/components/runes/HarvestRune.svelte';
+	import EarthRune from '$lib/components/runes/EarthRune.svelte';
+	import DayRune from '$lib/components/runes/DayRune.svelte';
+	import FireRune from '$lib/components/runes/FireRune.svelte';
 
 	let selectedSkill: SkillNode | null = null;
 
@@ -71,7 +75,7 @@
 			</svg>
 			Back
 		</button>
-		<h1 class="page-title">Choose Your Path</h1>
+		<h1 class="page-title">Choose Your Path Wisely</h1>
 	</header>
 
 	<div class="skill-tree-container">
@@ -101,9 +105,13 @@
 									<path d="M9 11V7a3 3 0 0 1 6 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
 								</svg>
 							{:else if skill.state === 'LEARNT'}
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-									<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-								</svg>
+								<HarvestRune />
+							{:else if skill.realm === 'HASHING'}
+								<EarthRune />
+							{:else if skill.realm === 'SYMMETRIC'}
+								<DayRune />
+							{:else if skill.realm === 'ASYMMETRIC'}
+								<FireRune />
 							{:else}
 								<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
 									<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
@@ -124,9 +132,7 @@
 				<h2 class="skill-title" style="color: {realmColors[selectedSkill.realm]}">{selectedSkill.title}</h2>
 				<p class="skill-description">{selectedSkill.description}</p>
 				
-				{#if selectedSkill.state === 'LEARNT'}
-					<p class="hint-text">Select a path to begin your learning journey</p>
-				{:else if selectedSkill.state === 'CAN_LEARN'}
+				{#if selectedSkill.state === 'CAN_LEARN'}
 					<button 
 						class="start-lesson-button"
 						style="background: linear-gradient(135deg, {realmColors[selectedSkill.realm]}, {realmColors[selectedSkill.realm]}dd)"
@@ -137,8 +143,9 @@
 							<path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 						</svg>
 					</button>
-				{:else}
-					<p class="hint-text">Complete prerequisites to unlock this skill</p>
+                {/if}
+				{#if selectedSkill.hint}
+					<p class="hint-text">{selectedSkill.hint}</p>
 				{/if}
 			</div>
 		</div>
@@ -160,7 +167,7 @@
 		gap: 1rem;
 		margin-bottom: 2rem;
 		position: relative;
-		z-index: 20;
+		z-index: 30;
 	}
 
 	.back-button {
