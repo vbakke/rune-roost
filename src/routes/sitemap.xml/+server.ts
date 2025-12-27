@@ -6,12 +6,11 @@ export async function GET({ url }) {
 	// Page definitions for the sitemap
 	const pages = [
 		{ url: '', changefreq: 'weekly', priority: '1.0' },
-		{ url: 'wīsdōm', changefreq: 'weekly', priority: '0.9' }
-		{ url: 'lær', changefreq: 'weekly', priority: '0.9' }
-		// Add more pages as you create them:
-		// { url: 'lessons/symmetric', changefreq: 'weekly', priority: '0.8' },
-		// { url: 'lessons/asymmetric', changefreq: 'weekly', priority: '0.8' },
-		// { url: 'lessons/hashing', changefreq: 'weekly', priority: '0.8' },
+		{ url: 'wīsdōm', changefreq: 'weekly', priority: '0.9' },
+		{ url: 'lær', changefreq: 'weekly', priority: '0.9' },
+		{ url: 'lær/symmetric', changefreq: 'weekly', priority: '0.8' },
+		{ url: 'lær/asymmetric', changefreq: 'weekly', priority: '0.8' },
+		{ url: 'lær/hashing', changefreq: 'weekly', priority: '0.8' }
 	];
 
 	const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import QuillIcon from '$lib/components/icons/QuillIcon.svelte';
 	import ScrollIcon from '$lib/components/icons/ScrollIcon.svelte';
+	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
 
 	// Shared random number between 10-99
 	let sharedNumber = $state(Math.floor(Math.random() * 90) + 10);
@@ -33,7 +34,13 @@
 
 	<!-- Symmetric Pane -->
 	<div id="symmetric" class="pane">
-		<h2>Symmetric</h2>
+		<div class="pane-header">
+			<h2>Symmetric</h2>
+			<a href="/lær/symmetric" class="lesson-button">
+				<RavenIcon />
+				<span>Learn</span>
+			</a>
+		</div>
 		<div class="encryption-flow">
 			<div class="desk scribe">
 				<input
@@ -64,7 +71,13 @@
 
 	<!-- Asymmetric Pane -->
 	<div id="asymmetric" class="pane">
-		<h2>Asymmetric</h2>
+		<div class="pane-header">
+			<h2>Asymmetric</h2>
+			<a href="/lær/asymmetric" class="lesson-button">
+				<RavenIcon />
+				<span>Learn</span>
+			</a>
+		</div>
 		<div class="encryption-flow">
 			<div class="desk scribe">
 				<input
@@ -95,7 +108,13 @@
 
 	<!-- Hashing Pane -->
 	<div id="hashing" class="pane">
-		<h2>Hashing</h2>
+		<div class="pane-header">
+			<h2>Hashing</h2>
+			<a href="/lær/hashing" class="lesson-button">
+				<RavenIcon />
+				<span>Learn</span>
+			</a>
+		</div>
 		<div class="encryption-flow">
 			<div class="desk scribe">
 				<input
@@ -180,6 +199,33 @@
 		margin-right: 1rem;
 		width: 120px;
 		text-align: left;
+	}
+
+	.pane-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 0.75rem;
+	}
+
+	.lesson-button {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		background: rgba(255, 255, 255, 0.2);
+		padding: 0.5rem 1rem;
+		border-radius: 8px;
+		text-decoration: none;
+		color: white;
+		font-weight: 600;
+		transition: all 0.2s;
+		border: 2px solid rgba(255, 255, 255, 0.3);
+	}
+
+	.lesson-button:hover {
+		background: rgba(255, 255, 255, 0.3);
+		transform: translateY(-2px);
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 	}
 
 	.encryption-flow {
