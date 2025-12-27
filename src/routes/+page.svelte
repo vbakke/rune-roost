@@ -4,7 +4,7 @@
 	import SEO from '$lib/components/SEO.svelte';
 
 	function navigateToSkillTree() {
-		goto('/skill-tree');
+		goto('/wīsdōm');
 	}
 
 	const structuredData = {

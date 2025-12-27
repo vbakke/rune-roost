@@ -18,7 +18,7 @@
 
 	function startLesson(skillId: string) {
 		// Navigate to læran page with realm anchor
-		goto(`/læran#${skillId}`);
+		goto(`/lær#${skillId}`);
 	}
 
 	function goBack() {
@@ -63,7 +63,7 @@
 	title="Choose Your Encryption Learning Path"
 	description="Select your encryption learning journey: symmetric encryption with secret keys, asymmetric encryption with public/private keys, or hashing fundamentals."
 	keywords="encryption skill tree, learn symmetric encryption, learn asymmetric encryption, hashing tutorial, cryptography courses"
-	url="/skill-tree"
+	url="/wīsdōm"
 	{structuredData}
 />
 
@@ -75,7 +75,7 @@
 			</svg>
 			Back
 		</button>
-		<h1 class="page-title">Choose Your Path Wisely</h1>
+		<h1 class="page-title">Choose Your Path to Wisdom</h1>
 	</header>
 
 	<div class="skill-tree-container">
@@ -125,8 +125,8 @@
 		</div>
 	</div>
 
-    <button class="panel-backdrop" onclick={closePanel} aria-label="Close panel"></button>
 	{#if selectedSkill}
+    	<button class="panel-backdrop" onclick={closePanel} aria-label="Close panel"></button>
 		<div class="skill-detail-panel">
 			<div class="panel-content">
 				<h2 class="skill-title" style="color: {realmColors[selectedSkill.realm]}">{selectedSkill.title}</h2>
@@ -198,8 +198,8 @@
 	.skill-tree-container {
 		flex: 1;
 		position: relative;
-		min-height: 500px;
-		height: calc(100vh - 200px);
+		max-height: calc(100vh - 300px);
+		min-height: 300px;
 		max-width: 800px;
 		width: 100%;
 		margin: 0 auto;

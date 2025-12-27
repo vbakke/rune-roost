@@ -6,7 +6,8 @@ export async function GET({ url }) {
 	// Page definitions for the sitemap
 	const pages = [
 		{ url: '', changefreq: 'weekly', priority: '1.0' },
-		{ url: 'skill-tree', changefreq: 'weekly', priority: '0.9' }
+		{ url: 'wīsdōm', changefreq: 'weekly', priority: '0.9' }
+		{ url: 'lær', changefreq: 'weekly', priority: '0.9' }
 		// Add more pages as you create them:
 		// { url: 'lessons/symmetric', changefreq: 'weekly', priority: '0.8' },
 		// { url: 'lessons/asymmetric', changefreq: 'weekly', priority: '0.8' },

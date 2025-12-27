@@ -21,12 +21,12 @@
 
 <div class="container">
 	<div class="nav-header">
-		<a href="/skill-tree" class="skill-tree-link">
+		<a href="/wīsdōm" class="skill-tree-link">
 			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 				<circle cx="12" cy="12" r="3"></circle>
 				<path d="M12 1v6m0 6v6m6.66-13.66l-4.24 4.24m0 6.84l4.24 4.24M1 12h6m6 0h6M5.34 5.34l4.24 4.24m0 6.84l-4.24 4.24"></path>
 			</svg>
-			Skill Tree
+			Knowledge Tree
 		</a>
 	</div>
 	<h1>Læran - Encryption Concepts</h1>
@@ -35,17 +35,17 @@
 	<div id="symmetric" class="pane">
 		<h2>Symmetric</h2>
 		<div class="encryption-flow">
-			<div class="scroll">
-				<div class="scroll-icon">
-                    <QuillIcon />
-				</div>
+			<div class="desk scribe">
 				<input
 					type="number"
 					bind:value={sharedNumber}
 					min="10"
 					max="99"
-					class="scroll-input"
+					class="desk-input"
 				/>
+				<div class="desk-icon">
+                    <QuillIcon />
+				</div>
 			</div>
 
 			<div class="key">
@@ -55,9 +55,9 @@
 
 			<div class="arrow">→</div>
 
-			<div class="scroll">
-				<div class="scroll-icon"><ScrollIcon /></div>
-				<div class="scroll-output">{symmetricEncrypted}</div>
+			<div class="desk scroll">
+				<div class="desk-icon"><ScrollIcon /></div>
+				<div class="desk-output">{symmetricEncrypted}</div>
 			</div>
 		</div>
 	</div>
@@ -66,17 +66,17 @@
 	<div id="asymmetric" class="pane">
 		<h2>Asymmetric</h2>
 		<div class="encryption-flow">
-			<div class="scroll">
-				<div class="scroll-icon">
-					<QuillIcon />
-				</div>
+			<div class="desk scribe">
 				<input
 					type="number"
 					bind:value={sharedNumber}
 					min="10"
 					max="99"
-					class="scroll-input"
+					class="desk-input"
 				/>
+				<div class="desk-icon">
+					<QuillIcon />
+				</div>
 			</div>
 
 			<div class="key">
@@ -86,9 +86,9 @@
 
 			<div class="arrow">→</div>
 
-			<div class="scroll">
-				<div class="scroll-icon"><ScrollIcon /></div>
-				<div class="scroll-output">{asymmetricEncrypted}</div>
+			<div class="desk scroll">
+				<div class="desk-icon"><ScrollIcon /></div>
+				<div class="desk-output">{asymmetricEncrypted}</div>
 			</div>
 		</div>
 	</div>
@@ -97,20 +97,20 @@
 	<div id="hashing" class="pane">
 		<h2>Hashing</h2>
 		<div class="encryption-flow">
-			<div class="scroll">
-				<div class="scroll-icon">
-					<QuillIcon />
-				</div>
+			<div class="desk scribe">
 				<input
 					type="number"
 					bind:value={sharedNumber}
 					min="10"
 					max="99"
-					class="scroll-input"
+					class="desk-input"
 				/>
+				<div class="desk-icon">
+					<QuillIcon />
+				</div>
 			</div>
 
-			<div class="digit-box">
+			<div class="desk hash-function">
 				{#each digits as digit, i}
 					<span class="digit">{digit}</span>
 					{#if i < digits.length - 1}
@@ -121,9 +121,9 @@
 
 			<div class="arrow">→</div>
 
-			<div class="scroll">
-				<div class="scroll-icon"><ScrollIcon /></div>
-				<div class="scroll-output">{crossSum}</div>
+			<div class="desk scroll">
+				<div class="desk-icon"><ScrollIcon /></div>
+				<div class="desk-output">{crossSum}</div>
 			</div>
 		</div>
 	</div>
@@ -190,7 +190,7 @@
 		flex-wrap: wrap;
 	}
 
-	.scroll {
+	.desk {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -201,14 +201,14 @@
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 	}
 
-	.scroll-icon {
+	.desk-icon {
 		font-size: 2rem;
 		display: flex;
 		align-items: center;
 	}
 
-	.scroll-input,
-	.scroll-output {
+	.desk-input,
+	.desk-output {
 		font-size: 2rem;
 		font-weight: bold;
 		text-align: center;
@@ -218,14 +218,18 @@
 		color: #333;
 	}
 
-	.scroll-input {
+	.desk-input {
 		border-bottom: 2px solid #667eea;
 		padding: 0.25rem;
 	}
 
-	.scroll-input:focus {
+	.desk-input:focus {
 		outline: none;
 		border-bottom-color: #764ba2;
+	}
+
+	.desk.scroll {
+		background-color: #8574e3;
 	}
 
 	.key {
@@ -242,7 +246,7 @@
 	.key-value {
 		font-size: 1.4rem;
 		font-weight: bold;
-		color: white;
+		color: #ecdfff;
 		background: rgba(0, 0, 0, 0.2);
 		padding: 0.25rem 0.75rem;
 		border-radius: 8px;
@@ -254,25 +258,19 @@
 		font-weight: bold;
 	}
 
-	.digit-box {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		background: rgba(255, 255, 255, 0.9);
-		padding: 0.75rem 1rem;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	.desk.hash-function {
+		background-color: #5654a4;
 	}
 
 	.digit {
 		font-size: 1.75rem;
 		font-weight: bold;
-		color: #333;
+		color: #ecdfff;
 	}
 
 	.plus {
 		font-size: 1.25rem;
-		color: #667eea;
+		color: #ecdfff;
 		font-weight: bold;
 	}
 
@@ -289,17 +287,17 @@
 			gap: 1rem;
 		}
 
-		.scroll {
+		.desk {
 			flex-direction: column;
 			padding: 1rem;
 		}
 
-		.scroll-icon {
+		.desk-icon {
 			font-size: 2.5rem;
 		}
 
-		.scroll-input,
-		.scroll-output {
+		.desk-input,
+		.desk-output {
 			font-size: 2rem;
 			min-width: 100px;
 		}
