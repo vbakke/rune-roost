@@ -8,7 +8,7 @@
 	--accent-blue: #60a5fa;
 	--accent-purple: #a78bfa;
 	--accent-pink: #f472b6;
-	--accent-green: #34d399;
+	--accent-green: #32c38e;
 	--border-color: #2d3b6b;
 	--shadow: rgba(0, 0, 0, 0.5);
 }
@@ -43,6 +43,33 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Fondamento", cursive;
   font-weight: 400;
   font-style: normal;
+}
+
+code {
+	color: var(--accent-pink);
+    background: #FFFFFFB0;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+ref {
+	color: var(--accent-green);
+	font-style: italic;
+	cursor: help;
+	border-bottom: 1px dotted var(--accent-green);
+}
+
+ref.non-italics {
+	font-style: normal;
+}
+
+todo {
+	color: #aa70b7;
+	font-style: italic;	
+	font-size: small;
+}
+todo::before {
+	content: "🛠️ ToDo: ";
 }
 
 .fondamento-regular-italic {

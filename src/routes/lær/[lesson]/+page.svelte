@@ -86,7 +86,6 @@
 
 	h1 {
 		font-size: 2.5rem;
-		color: #333;
 		margin: 1rem 0;
 	}
 

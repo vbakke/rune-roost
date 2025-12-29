@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>Learn Symmetric Encryption</title>
+	<title>In the very beginning...</title>
 </svelte:head>
 
 <div class="lesson-container">
@@ -18,65 +18,33 @@
 		<a href="/lær" class="back-link">
 			← Back to Learning
 		</a>
-		<h1>Symmetric Encryption</h1>
+		<h1>In the very beginning...</h1>
 	</div>
 
 	<div class="content-area">
 		<BookComponent bind:currentPage>
+
 			<Page>
-				<h3>Basic encryption</h3>
-				<p>Enter a number and see how symmetric encryption works:</p>
-				<p>Enter a number and see how symmetric encryption works:</p>
+				<h2>... well a bit later actually</h2>
+				<p>As everyone knows, <ref name="caesar">Cæsar wrote messages</ref> in code. To read the message it had to be <em>decoded</em>.</p>
+				<p>The message was <em>encoded</em>, not <em>encrypted</em>.</p>
+				<p>Writing <code>"ABBA"</code> as <code>1,2,2,1</code>, <code>NOON</code> or <code>QUJCQQ==</code> is <em>not</em> encryption. </p>
+				<p>The last is easily spotted as <ref name="base64">base64 encoding</ref> by the trailing equal signs. And easily decoded, without a secret key.</p>
 				
-				<div class="interactive-demo">
-					<div class="input-group">
-						<label for="userNumber">Your Number:</label>
-						<input 
-							id="userNumber"
-							type="number" 
-							bind:value={userInput}
-							min="0"
-						/>
-					</div>
-					
-					<div class="formula-display">
-						<span class="operator">+</span>
-					</div>
-					
-					<div class="input-group">
-						<label for="secretKey">Secret Key:</label>
-						<input 
-							id="secretKey"
-							type="number" 
-							bind:value={secretKey}
-							min="0"
-						/>
-					</div>
-					
-					{#if userInput}
-						<div class="result">
-							<p><strong>Original:</strong> {userInput}</p>
-							<p><strong>Encrypted:</strong> {encryptedValue}</p>
-							<p class="formula">{userInput} + {secretKey} = {encryptedValue}</p>
-						</div>
-					{/if}
-				</div>
-				
-				<p>Try changing the number and see how the encrypted value changes!</p>
 			</Page>
 
 			<Page>
-				<h3>How Symmetric Encryption Works</h3>
-				<p>Symmetric encryption is a method of encryption where the same key is used for both encrypting and decrypting data. This means that both the sender and receiver must have access to the same secret key.</p>
-				<p>Here's a simple example to illustrate the concept:</p>
-				<ul>
-					<li><strong>Original Number:</strong> 25</li>
-					<li><strong>Secret Key:</strong> 42</li>
-					<li><strong>Encryption Process:</strong> 25 + 42 = 67 (Encrypted Number)</li>
-					<li><strong>Decryption Process:</strong> 67 - 42 = 25 (Original Number)</li>
-				</ul>
-				<p>In this example, both parties use the same secret key (42) to encrypt and decrypt the number. The security of symmetric encryption relies on keeping the secret key confidential between the communicating parties.</p>
+				<h3>Encryption</h3>
+				<p>Encryption requires something secret, known only to the sender and receiver, called a <ref name="secret-key">secret key</ref>.</p>
+				<p>Repeat after me</p>
+					<ul>
+						<li><i>base64 is not encryption</i></li>
+						<li><i>base64 is not encryption</i></li>
+						<li><i>base64 is not encryption</i></li>
+					</ul>
+				<p><todo>"decode" b64 QkFCQQ== to BABA to gain first Skill</todo></p>
 			</Page>
+
 		</BookComponent>
 	</div>
 </div>

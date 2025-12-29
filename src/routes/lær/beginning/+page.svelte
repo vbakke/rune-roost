@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>Learn Symmetric Encryption</title>
+	<title>In the very beginning...</title>
 </svelte:head>
 
 <div class="lesson-container">
@@ -18,64 +18,55 @@
 		<a href="/lær" class="back-link">
 			← Back to Learning
 		</a>
-		<h1>Symmetric Encryption</h1>
+		<h1>In the very beginning...</h1>
 	</div>
 
 	<div class="content-area">
 		<BookComponent bind:currentPage>
+
 			<Page>
-				<h3>Basic encryption</h3>
-				<p>Enter a number and see how symmetric encryption works:</p>
-				<p>Enter a number and see how symmetric encryption works:</p>
+				<h2>... well a bit later actually,</h2>
+				<p>Julius Cæsar, as everyone knows, <em>"encrypted"</em> messages to his generals by 
+					<em>rotating</em> the alphabet.</p>
+				<p>Since the method  allows for a <ref name="secret-key">secret keys</ref> that, it 
+					is possible to define this as encryption, and not just an <ref name="encoding">encoding</ref>.</p>
 				
-				<div class="interactive-demo">
-					<div class="input-group">
-						<label for="userNumber">Your Number:</label>
-						<input 
-							id="userNumber"
-							type="number" 
-							bind:value={userInput}
-							min="0"
-						/>
-					</div>
-					
-					<div class="formula-display">
-						<span class="operator">+</span>
-					</div>
-					
-					<div class="input-group">
-						<label for="secretKey">Secret Key:</label>
-						<input 
-							id="secretKey"
-							type="number" 
-							bind:value={secretKey}
-							min="0"
-						/>
-					</div>
-					
-					{#if userInput}
-						<div class="result">
-							<p><strong>Original:</strong> {userInput}</p>
-							<p><strong>Encrypted:</strong> {encryptedValue}</p>
-							<p class="formula">{userInput} + {secretKey} = {encryptedValue}</p>
-						</div>
-					{/if}
-				</div>
-				
-				<p>Try changing the number and see how the encrypted value changes!</p>
+				<p class="tight-lines">
+					<code>ABCDEFGHIKLMNOPQRSTVXYZ</code><br/>
+					<code>DEFGHIKLMNOPQRSTVXYZABC</code> secret key: <code>D</code>
+				</p>
+				<br/>
+				<todo>Implement interactive Caesar cipher demo here</todo>
+				<h4>Computers</h4>
+				<p>Computers like to compute numbers, not letters. </p>
 			</Page>
 
 			<Page>
-				<h3>How Symmetric Encryption Works</h3>
-				<p>Symmetric encryption is a method of encryption where the same key is used for both encrypting and decrypting data. This means that both the sender and receiver must have access to the same secret key.</p>
-				<p>Here's a simple example to illustrate the concept:</p>
+				<h3>Encrypt</h3>				
+				<p>
+					Let's (mis)use <ref name="circle_plus" class="non-italics">⊕</ref> as a 
+					<em>rollover addition</em>, when we <em>encrypt</em> using the secret key <code>D</code> or <code>3</code>.
+				</p>
+				<p>ABBA encrypted is <code>1,2,2,1 ⊕ 3 = 4,5,5,4</code><br/>
+					And BOY yields <code>2,14,22 ⊕ 3 = 4,17,2</code><br/>
+				</p>
+				<p><i>(Julius only had 23 letters in his alphabet).</i></p>
+				<h3>Decrypt</h3>
+				<p>To decrypt, we just reverse the operation: <code>4,5,5,4 ⊖ 3 = 1,2,2,1</code>, 
+					yielding <code>ABBA</code> again.</p>
+				<p>Reverse <em>the operation</em>.<br/>
+					But use <em>the same secret key</em>.
+				</p>
+			</Page>
+
+			<Page>
+				<h3>Three topics</h3>
+				<p>When dealing with encryption, novices are confused by three very different concepts:</p>
 				<ul>
-					<li><strong>Original Number:</strong> 25</li>
-					<li><strong>Secret Key:</strong> 42</li>
-					<li><strong>Encryption Process:</strong> 25 + 42 = 67 (Encrypted Number)</li>
-					<li><strong>Decryption Process:</strong> 67 - 42 = 25 (Original Number)</li>
+					<li>Encoding vs Encryption</li>
+					<li>Symmetric vs Asymmetric encryption</li>
+					<li>Hashing vs Encryption</li>
 				</ul>
-				<p>In this example, both parties use the same secret key (42) to encrypt and decrypt the number. The security of symmetric encryption relies on keeping the secret key confidential between the communicating parties.</p>
 			</Page>
 		</BookComponent>
 	</div>

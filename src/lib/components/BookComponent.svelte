@@ -145,7 +145,7 @@
 			aria-label="Next page"
 		>
 			<svg viewBox="0 0 30 30" fill="currentColor">
-				<path d="M 30,0 L 0,0 L 30,30 Z" />
+				<path d="M 30,0 L 0,30 L 30,30 Z" />
 			</svg>
 		</button>
 	{/if}
@@ -176,7 +176,7 @@
 		align-items: center;
 		gap: 1.5rem;
 		padding: 1rem;
-		max-width: 1000px;
+		max-width: 815px;
 		margin: 0 auto;
 		position: relative;
 	}
@@ -185,7 +185,6 @@
 		text-align: center;
 		margin-bottom: 0;
 		font-size: 0.9rem;
-		color: #333;
 		font-weight: 500;
 	}
 
@@ -207,7 +206,7 @@
 	.pages-container {
 		display: grid;
 		grid-template-columns: 400px 400px;
-		gap: 0;
+		gap: 5px;
 		min-height: 500px;
 	}
 
@@ -262,9 +261,14 @@
 
 	.pages-container :global([data-page-marker] p) {
 		margin-bottom: 1rem;
-		line-height: 1.8;
+		line-height: 1.4;
 		color: #333;
 	}
+
+	.pages-container :global([data-page-marker] p.tight-lines) {
+		line-height: 1;
+	}
+
 
 	.pages-container :global([data-page-marker] ul),
 	.pages-container :global([data-page-marker] ol) {
@@ -272,8 +276,8 @@
 		padding-left: 1.5rem;
 	}
 
-	.pages-container :global([data-page-marker] li) {
-		margin-bottom: 0.5rem;
+	.pages-container :global([data-page-marker] p:has(+ ul)) {
+  		margin-bottom: 0;
 	}
 
 	.dog-ear {
@@ -288,14 +292,14 @@
 	}
 
 	.dog-ear.left {
-		top: 4rem;
-		left: 2rem;
+		bottom: 7rem;
+		left: 8px;
 		color: #d0c8b0;
 	}
-
+	
 	.dog-ear.right {
-		top: 4rem;
-		right: 2rem;
+		bottom: 7rem;
+		right: 8px;
 		color: #d0c8b0;
 	}
 
