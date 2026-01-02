@@ -3,10 +3,22 @@
 	import Page from '$lib/components/Page.svelte';
 
 	let currentPage = $state(0);
-	let userInput = $state(0);
-	let secretKey = $state(42);
-	let encryptedValueAdd = $derived(userInput + secretKey);
-	let encryptedValueAddRound = $derived(userInput - secretKey);
+	let secretKey: number = $state(1);
+	let alphabet: string = 'ABCDEFGHIKLMNOPQRSTVXYZ';
+	let shiftedAlphabet: string = shifted();
+
+	function shift(num) {
+		secretKey = (secretKey + num + alphabet.length) % alphabet.length;
+		shiftedAlphabet = shifted();
+	}
+
+	function shifted() {
+		return (alphabet + alphabet).substr(secretKey, alphabet.length);
+	}
+
+	function secretKeyIdentifier(secretKey: string) {
+		return alphabet.substr(secretKey, 1);
+	}
 </script>
 
 <svelte:head>
@@ -32,13 +44,15 @@
 					is possible to define this as encryption, and not just an <ref name="encoding">encoding</ref>.</p>
 				
 				<p class="tight-lines">
-					<code>ABCDEFGHIKLMNOPQRSTVXYZ</code><br/>
-					<code>DEFGHIKLMNOPQRSTVXYZABC</code> secret key: <code>D</code>
+					<code>{ alphabet }</code><br/>
+					<code>{ shiftedAlphabet }</code> secret key: <code>{ secretKeyIdentifier(secretKey) }</code>
+					<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>&lt;-</button>
+					<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>-&gt;</button>
 				</p>
 				<br/>
-				<todo>Implement interactive Caesar cipher demo here</todo>
 				<h4>Computers</h4>
 				<p>Computers like to compute numbers, not letters. </p>
+				<p>So we will <ref name="encode">encode</ref>A=1, B=2, etc.And the <em>secret key</em> as the <em>shift</em>, i.e. <code>C</code> is a shift of <code>+2</code> from <code>A</code></p>
 			</Page>
 
 			<Page>
@@ -47,12 +61,12 @@
 					Let's (mis)use <ref name="circle_plus" class="non-italics">⊕</ref> as a 
 					<em>rollover addition</em>, when we <em>encrypt</em> using the secret key <code>D</code> or <code>3</code>.
 				</p>
-				<p>ABBA encrypted is <code>1,2,2,1 ⊕ 3 = 4,5,5,4</code><br/>
-					And BOY yields <code>2,14,22 ⊕ 3 = 4,17,2</code><br/>
+				<p>ABBA encrypted is <code>1,2,2,1 ⊕ {secretKey} = 4,5,5,4</code><br/>
+					And BOY yields <code>2,14,22 ⊕ {secretKey} = 4,17,2</code><br/>
 				</p>
 				<p><i>(Julius only had 23 letters in his alphabet).</i></p>
 				<h3>Decrypt</h3>
-				<p>To decrypt, we just reverse the operation: <code>4,5,5,4 ⊖ 3 = 1,2,2,1</code>, 
+				<p>To decrypt, we just reverse the operation: <code>4,5,5,4 ⊖ {secretKey} = 1,2,2,1</code>, 
 					yielding <code>ABBA</code> again.</p>
 				<p>Reverse <em>the operation</em>.<br/>
 					But use <em>the same secret key</em>.

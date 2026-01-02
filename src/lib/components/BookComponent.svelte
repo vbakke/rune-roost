@@ -75,6 +75,10 @@
 	}
 
 	function handleMouseDown(e: MouseEvent) {
+		// Ignore if clicking on a button or interactive element
+		if ((e.target as HTMLElement).closest('button, input, select, textarea, a')) {
+			return;
+		}
 		isDragging = true;
 		startX = e.clientX;
 	}
