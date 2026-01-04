@@ -2,14 +2,59 @@
 	import BookComponent from '$lib/components/BookComponent.svelte';
 	import Page from '$lib/components/Page.svelte';
 
+	const ABBA: string = 'ABBA';
+	const BOY: string = 'BOY';
+
 	let currentPage = $state(0);
 	let secretKey: number = $state(1);
 	let alphabet: string = 'ABCDEFGHIKLMNOPQRSTVXYZ';
+	// let alphabet: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	let shiftedAlphabet: string = shifted();
 
-	function shift(num) {
-		secretKey = (secretKey + num + alphabet.length) % alphabet.length;
+	function onShiftAlphabeth(e: Event, direction: number) {
+		e.preventDefault();
+		e.stopPropagation();
+		shift(direction);
+	}
+
+	function shift(direction: number) {
+		secretKey = (secretKey + direction + alphabet.length) % alphabet.length;
 		shiftedAlphabet = shifted();
+	}
+
+	function encode(message: string): Number[] {
+		let encoded: Number[] = [];
+		for (let char of message.toUpperCase()) {
+			let index = alphabet.indexOf(char) + 1;
+			if (index !== -1) {
+				encoded.push(index);
+			} else {
+				encoded.push('?'); z
+			}
+		}
+		return encoded;
+	}
+
+	function decode(encoded: Number[]): string {
+		let decoded = '';
+		for (let num of encoded) {
+			num--;
+			if (num >= 0 && num < alphabet.length) {
+				decoded += alphabet[num];
+			} else {
+				decoded += 'x';
+			}
+		}
+		return decoded;
+	}
+
+	function encrypt(message: Number[], secretKey: number): Number[] {
+		let encrypted: Number[] = [];
+		for (let num of message) {
+			let index = (num - 1 + secretKey) % alphabet.length;
+			encrypted.push(index + 1);
+		}
+		return encrypted;
 	}
 
 	function shifted() {
@@ -27,9 +72,9 @@
 
 <div class="lesson-container">
 	<div class="lesson-header">
-		<a href="/lær" class="back-link">
+		<!-- <a href="/lær" class="back-link">
 			← Back to Learning
-		</a>
+		</a> -->
 		<h1>In the very beginning...</h1>
 	</div>
 
@@ -40,19 +85,25 @@
 				<h2>... well a bit later actually,</h2>
 				<p>Julius Cæsar, as everyone knows, <em>"encrypted"</em> messages to his generals by 
 					<em>rotating</em> the alphabet.</p>
-				<p>Since the method  allows for a <ref name="secret-key">secret keys</ref> that, it 
-					is possible to define this as encryption, and not just an <ref name="encoding">encoding</ref>.</p>
+				<p>Since the method  allows for a <ref name="secret-key">secret keys</ref>,
+					it is possible to define this as <ref name="encryption">encryption</ref>, and not just an <ref name="encoding">encoding</ref>.</p>
 				
 				<p class="tight-lines">
 					<code>{ alphabet }</code><br/>
-					<code>{ shiftedAlphabet }</code> secret key: <code>{ secretKeyIdentifier(secretKey) }</code>
-					<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>&lt;-</button>
-					<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>-&gt;</button>
+					<code>{ shiftedAlphabet }</code> secret key: <code>{ secretKeyIdentifier(secretKey) }</code><br/>
+				<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
+					<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M 6 12 L 12 4 M 6 12 L 12 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</button>
+				<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>
+					<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M 12 12 L 6 4 M 12 12 L 6 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+						<!-- <path d="M 18 4 L 18 20 M 18 12 L 6 4 M 18 12 L 6 20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/> -->
+					</svg>
+
+				</button>
 				</p>
-				<br/>
-				<h4>Computers</h4>
-				<p>Computers like to compute numbers, not letters. </p>
-				<p>So we will <ref name="encode">encode</ref>A=1, B=2, etc.And the <em>secret key</em> as the <em>shift</em>, i.e. <code>C</code> is a shift of <code>+2</code> from <code>A</code></p>
 			</Page>
 
 			<Page>
@@ -61,13 +112,15 @@
 					Let's (mis)use <ref name="circle_plus" class="non-italics">⊕</ref> as a 
 					<em>rollover addition</em>, when we <em>encrypt</em> using the secret key <code>D</code> or <code>3</code>.
 				</p>
-				<p>ABBA encrypted is <code>1,2,2,1 ⊕ {secretKey} = 4,5,5,4</code><br/>
-					And BOY yields <code>2,14,22 ⊕ {secretKey} = 4,17,2</code><br/>
+				<p>Encrypting<br/>{ABBA}: <code>{ABBA} ⊕ {secretKey} = {decode(encrypt(encode(ABBA), secretKey))}</code> <br/>
+				    And {BOY}: <code>{BOY} ⊕ {secretKey} = {decode(encrypt(encode(BOY), secretKey))}</code> <br/>
 				</p>
 				<p><i>(Julius only had 23 letters in his alphabet).</i></p>
+
 				<h3>Decrypt</h3>
-				<p>To decrypt, we just reverse the operation: <code>4,5,5,4 ⊖ {secretKey} = 1,2,2,1</code>, 
-					yielding <code>ABBA</code> again.</p>
+				<p>To decrypt, we just reverse the operation:<br/>
+					<code>{decode(encrypt(encode(ABBA), secretKey))} ⊖ {secretKey} = {ABBA}</code> 
+				</p>
 				<p>Reverse <em>the operation</em>.<br/>
 					But use <em>the same secret key</em>.
 				</p>
@@ -95,7 +148,6 @@
 	}
 
 	.lesson-header {
-		margin-bottom: 2rem;
 		text-align: center;
 	}
 
@@ -118,7 +170,7 @@
 
 	h1 {
 		font-size: 2.5rem;
-		margin: 1rem 0;
+		/* margin: 1rem 0; */
 	}
 
 	.content-area {
@@ -182,6 +234,14 @@
 	.formula {
 		color: #667eea;
 		font-weight: 600;
+	}
+
+	
+	svg {
+		display: block;
+		width: 9px;
+		height: 12px;
+		fill: #5d3a1a;
 	}
 
 	@media (max-width: 768px) {

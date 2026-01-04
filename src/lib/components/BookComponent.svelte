@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	interface Props {
 		children: Snippet;
@@ -28,9 +29,9 @@
 				page.classList.remove('active-left', 'active-right');
 				
 				// Add classes for visible pages
-				if (index === currentPage) {
+				if (index === currentPage - 1) {
 					page.classList.add('active-left');
-				} else if (index === currentPage + 1) {
+				} else if (index === currentPage) {
 					page.classList.add('active-right');
 				}
 			});
@@ -102,13 +103,44 @@
 		
 		isDragging = false;
 	}
+
+	function pageFromHash(): number {
+	    const hash = window.location.hash;
+	    if (hash && /^#p\d+$/.test(hash)) {
+	        const n = parseInt(hash.slice(2), 10);
+	        return isNaN(n) ? 0 : Math.max(0, n - 1);
+	    }
+	    return 0;
+	}
+
+	function updateHash(page: number) {
+	    window.location.hash = page > 0 ? `#p${page + 1}` : '';
+	}
+
+	// Sync page with hash on mount and hashchange
+	onMount(() => {
+	    currentPage = pageFromHash();
+
+	    const onHashChange = () => {
+	        const newPage = pageFromHash();
+	        if (newPage !== currentPage) {
+	            currentPage = newPage;
+	        }
+	    };
+	    window.addEventListener('hashchange', onHashChange);
+
+	    return () => {
+	        window.removeEventListener('hashchange', onHashChange);
+	    };
+	});
+
+	// Update hash when page changes
+	$effect(() => {
+	    updateHash(currentPage);
+	});
 </script>
 
 <div class="book-container">
-	<!-- Progress indicator -->
-	<div class="page-progress">
-		Page {currentPage + 1} of {pageCount}
-	</div>
 
 	<!-- Book pages -->
 	<div 
@@ -163,6 +195,10 @@
 		>
 			← Previous
 		</button>
+		<!-- Progress indicator -->
+		<div class="page-progress">
+			Page {currentPage + 1} of {pageCount}
+		</div>
 		<button 
 			on:click={nextPage} 
 			disabled={currentPage >= pageCount - 1}
@@ -253,7 +289,7 @@
 
 	.pages-container :global([data-page-marker] h2) {
 		font-size: 1.5rem;
-		margin-bottom: 0.8rem;
+		margin-bottom: 0.6rem;
 		color: #333;
 	}
 
@@ -273,6 +309,35 @@
 		line-height: 1;
 	}
 
+	.pages-container :global([data-page-marker] button.book-button) {
+		background: linear-gradient(135deg, #deb887 0%, #d2a679 50%, #c49a6c 100%);
+		border: 2px solid #8b4513;
+		border-radius: 4px;
+		box-shadow: 
+			0 2px 4px rgba(0, 0, 0, 0.3),
+			inset 0 1px 0 rgba(255, 255, 255, 0.3),
+			inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+		cursor: pointer;
+		padding: 0.1rem 0.1rem;
+		transition: all 0.2s;
+		position: relative;
+	}
+
+	.pages-container :global([data-page-marker] button.book-button:hover) {
+		background: linear-gradient(135deg, #e6c9a0 0%, #dbb588 50%, #d0a67b 100%);
+		transform: translateY(-1px);
+		box-shadow: 
+			0 3px 6px rgba(0, 0, 0, 0.35),
+			inset 0 1px 0 rgba(255, 255, 255, 0.4),
+			inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+	}
+
+	.pages-container :global([data-page-marker] button.book-button:active) {
+		transform: translateY(1px);
+		box-shadow: 
+			0 1px 2px rgba(0, 0, 0, 0.3),
+			inset 0 1px 2px rgba(0, 0, 0, 0.2);
+	}
 
 	.pages-container :global([data-page-marker] ul),
 	.pages-container :global([data-page-marker] ol) {
@@ -356,8 +421,11 @@
 		}
 
 		/* On mobile, only show current page */
-		.pages-container :global([data-page-marker].active-right) {
+		.pages-container :global([data-page-marker].active-left) {
 			display: none;
+		}
+		.pages-container :global([data-page-marker].active-right) {
+			grid-column: 1;
 		}
 
 		.dog-ear.right {
