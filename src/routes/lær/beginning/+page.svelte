@@ -1,17 +1,18 @@
 <script lang="ts">
 	import BookComponent from '$lib/components/BookComponent.svelte';
 	import Page from '$lib/components/Page.svelte';
+	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
 
 	const ABBA: string = 'ABBA';
 	const BOY: string = 'BOY';
 
 	let currentPage = $state(0);
-	let secretKey: number = $state(1);
+	let secretKey: number = $state(2);
 	let alphabet: string = 'ABCDEFGHIKLMNOPQRSTVXYZ';
 	// let alphabet: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	let shiftedAlphabet: string = shifted();
 
-	function onShiftAlphabeth(e: Event, direction: number) {
+	function onShiftAlphabet(e: Event, direction: number) {
 		e.preventDefault();
 		e.stopPropagation();
 		shift(direction);
@@ -72,9 +73,6 @@
 
 <div class="lesson-container">
 	<div class="lesson-header">
-		<!-- <a href="/lær" class="back-link">
-			← Back to Learning
-		</a> -->
 		<h1>In the very beginning...</h1>
 	</div>
 
@@ -85,41 +83,43 @@
 				<h2>... well a bit later actually,</h2>
 				<p>Julius Cæsar, as everyone knows, <em>"encrypted"</em> messages to his generals by 
 					<em>rotating</em> the alphabet.</p>
-				<p>Since the method  allows for a <ref name="secret-key">secret keys</ref>,
-					it is possible to define this as <ref name="encryption">encryption</ref>, and not just an <ref name="encoding">encoding</ref>.</p>
-				
 				<p class="tight-lines">
 					<code>{ alphabet }</code><br/>
 					<code>{ shiftedAlphabet }</code> secret key: <code>{ secretKeyIdentifier(secretKey) }</code><br/>
-				<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
-					<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
-						<path d="M 6 12 L 12 4 M 6 12 L 12 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
-				</button>
-				<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>
-					<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
-						<path d="M 12 12 L 6 4 M 12 12 L 6 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-						<!-- <path d="M 18 4 L 18 20 M 18 12 L 6 4 M 18 12 L 6 20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/> -->
-					</svg>
-
-				</button>
+					<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
+						<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M 6 12 L 12 4 M 6 12 L 12 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</button>
+					<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>
+						<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M 12 12 L 6 4 M 12 12 L 6 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</button>
 				</p>
+
+				<p>
+					Since the method  allows for a <ref name="secret-key">secret keys</ref>,
+					it is possible to define this as <ref name="encryption">encryption</ref>, and not just an <ref name="encoding">encoding</ref>.
+				</p>
+				
+				<p><i>(Note. Julius had only 23 letters in his alphabet)</i></p>
+
 			</Page>
 
 			<Page>
 				<h3>Encrypt</h3>				
 				<p>
 					Let's (mis)use <ref name="circle_plus" class="non-italics">⊕</ref> as a 
-					<em>rollover addition</em>, when we <em>encrypt</em> using the secret key <code>D</code> or <code>3</code>.
+					<em>"rollover addition"</em> to mean if we roll past 
+					<code>{alphabet.slice(-1)}</code> we continue on <code>{alphabet.slice(0, 1)}</code>.
 				</p>
-				<p>Encrypting<br/>{ABBA}: <code>{ABBA} ⊕ {secretKey} = {decode(encrypt(encode(ABBA), secretKey))}</code> <br/>
-				    And {BOY}: <code>{BOY} ⊕ {secretKey} = {decode(encrypt(encode(BOY), secretKey))}</code> <br/>
+				<p>Encrypting<br/>{ABBA}: <code>{ABBA} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(ABBA), secretKey))}</code> <br/>
+				    And {BOY}: <code>{BOY} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(BOY), secretKey))}</code> <br/>
 				</p>
-				<p><i>(Julius only had 23 letters in his alphabet).</i></p>
-
 				<h3>Decrypt</h3>
 				<p>To decrypt, we just reverse the operation:<br/>
-					<code>{decode(encrypt(encode(ABBA), secretKey))} ⊖ {secretKey} = {ABBA}</code> 
+					<code>{decode(encrypt(encode(ABBA), secretKey))} ⊖ {secretKeyIdentifier(secretKey)} = {ABBA}</code> 
 				</p>
 				<p>Reverse <em>the operation</em>.<br/>
 					But use <em>the same secret key</em>.
@@ -134,6 +134,13 @@
 					<li>Symmetric vs Asymmetric encryption</li>
 					<li>Hashing vs Encryption</li>
 				</ul>
+				<p>
+					Let's dive into the confusion:<br/>
+					<a href="/lær" class="lesson-button">
+						<RavenIcon />
+						<span>Learn</span>
+					</a>
+				</p>
 			</Page>
 		</BookComponent>
 	</div>

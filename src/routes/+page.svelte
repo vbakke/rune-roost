@@ -3,8 +3,8 @@
 	import { goto } from '$app/navigation';
 	import SEO from '$lib/components/SEO.svelte';
 
-	function navigateToSkillTree() {
-		goto('/wīsdōm');
+	function navigateToBeginning() {
+		goto('/lær/beginning');
 	}
 
 	const structuredData = {
@@ -65,7 +65,7 @@
 		<h2 class="subtitle">Hows and Whats</h2>
 		<p class="tagline">for programmers and other novices</p>
 
-		<button class="start-button" onclick={navigateToSkillTree}>
+		<button class="start-button" onclick={navigateToBeginning}>
 			<span>Start Your Journey</span>
 			<svg class="arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
 				<path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
