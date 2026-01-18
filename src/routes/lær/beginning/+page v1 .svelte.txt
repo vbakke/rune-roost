@@ -1,18 +1,17 @@
 <script lang="ts">
 	import BookComponent from '$lib/components/BookComponent.svelte';
 	import Page from '$lib/components/Page.svelte';
-	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
 
 	const ABBA: string = 'ABBA';
 	const BOY: string = 'BOY';
 
 	let currentPage = $state(0);
-	let secretKey: number = $state(2);
+	let secretKey: number = $state(1);
 	let alphabet: string = 'ABCDEFGHIKLMNOPQRSTVXYZ';
 	// let alphabet: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	let shiftedAlphabet: string = shifted();
 
-	function onShiftAlphabet(e: Event, direction: number) {
+	function onShiftAlphabeth(e: Event, direction: number) {
 		e.preventDefault();
 		e.stopPropagation();
 		shift(direction);
@@ -73,6 +72,9 @@
 
 <div class="lesson-container">
 	<div class="lesson-header">
+		<!-- <a href="/lær" class="back-link">
+			← Back to Learning
+		</a> -->
 		<h1>In the very beginning...</h1>
 	</div>
 
@@ -83,44 +85,44 @@
 				<h2>... well a bit later actually,</h2>
 				<p>Julius Cæsar, as everyone knows, <em>"encrypted"</em> messages to his generals by 
 					<em>rotating</em> the alphabet.</p>
+				<p>Since the method  allows for a <ref name="secret-key">secret keys</ref>,
+					it is possible to define this as <ref name="encryption">encryption</ref>, and not just an <ref name="encoding">encoding</ref>.</p>
+				
 				<p class="tight-lines">
 					<code>{ alphabet }</code><br/>
 					<code>{ shiftedAlphabet }</code> secret key: <code>{ secretKeyIdentifier(secretKey) }</code><br/>
-					<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
-						<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
-							<path d="M 6 12 L 12 4 M 6 12 L 12 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-						</svg>
-					</button>
-					<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>
-						<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
-							<path d="M 12 12 L 6 4 M 12 12 L 6 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-						</svg>
-					</button>
-				</p>
+				<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
+					<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M 6 12 L 12 4 M 6 12 L 12 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</button>
+				<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>
+					<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M 12 12 L 6 4 M 12 12 L 6 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+						<!-- <path d="M 18 4 L 18 20 M 18 12 L 6 4 M 18 12 L 6 20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/> -->
+					</svg>
 
-				<p>
-					Since the method  allows for a <ref name="secret-key">secret keys</ref>,
-					it is possible to define this as <ref name="encryption">encryption</ref>, and not just an <ref name="encoding">encoding</ref>.
+				</button>
 				</p>
-				
-				<p><i>(Note. Julius had only 23 letters in his alphabet)</i></p>
-
+				<br/>
+				<h4>Computers</h4>
+				<p>Computers like to compute numbers, not letters. </p>
+				<p>So we will <ref name="encode">encode</ref>A=1, B=2, etc.And the <em>secret key</em> as the <em>shift</em>, i.e. <code>C</code> is a shift of <code>+2</code> from <code>A</code></p>
 			</Page>
 
 			<Page>
 				<h3>Encrypt</h3>				
 				<p>
 					Let's (mis)use <ref name="circle_plus" class="non-italics">⊕</ref> as a 
-					<em>"rollover addition"</em> to mean if we roll past 
-					<code>{alphabet.slice(-1)}</code> we continue on <code>{alphabet.slice(0, 1)}</code>.
+					<em>rollover addition</em>, when we <em>encrypt</em> using the secret key <code>D</code> or <code>3</code>.
 				</p>
-				<p>Encrypting<br/>{ABBA}: <code>{ABBA} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(ABBA), secretKey))}</code> <br/>
-				    And {BOY}: <code>{BOY} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(BOY), secretKey))}</code> <br/>
+				<p>Encrypting<br/>{ABBA}: <code>{encode(ABBA)} ⊕ {secretKey} = {encrypt(encode(ABBA), secretKey)}</code> &rightarrow; {decode(encrypt(encode(ABBA), secretKey))} <br/>
+				    And {BOY}: <code>{encode(BOY)} ⊕ {secretKey} = {encrypt(encode(BOY), secretKey)}</code> &rightarrow; {decode(encrypt(encode(BOY), secretKey))} <br/>
 				</p>
+				<p><i>(Julius only had 23 letters in his alphabet).</i></p>
 				<h3>Decrypt</h3>
-				<p>To decrypt, we just reverse the operation:<br/>
-					<code>{decode(encrypt(encode(ABBA), secretKey))} ⊖ {secretKeyIdentifier(secretKey)} = {ABBA}</code> 
-				</p>
+				<p>To decrypt, we just reverse the operation: <code>4,5,5,4 ⊖ {secretKey} = 1,2,2,1</code>, 
+					yielding <code>ABBA</code> again.</p>
 				<p>Reverse <em>the operation</em>.<br/>
 					But use <em>the same secret key</em>.
 				</p>
@@ -134,15 +136,6 @@
 					<li>Symmetric vs Asymmetric encryption</li>
 					<li>Hashing vs Encryption</li>
 				</ul>
-				<p>
-					Let's dive into the confusion:<br/>
-				</p>
-				<div class="mid">
-					<a href="/training" class="lesson-button">
-						<RavenIcon />
-						<span>Learn</span>
-					</a>
-				</div>
 			</Page>
 		</BookComponent>
 	</div>
@@ -157,6 +150,7 @@
 	}
 
 	.lesson-header {
+		margin-bottom: 2rem;
 		text-align: center;
 	}
 
@@ -179,7 +173,7 @@
 
 	h1 {
 		font-size: 2.5rem;
-		/* margin: 1rem 0; */
+		margin: 1rem 0;
 	}
 
 	.content-area {
@@ -245,33 +239,7 @@
 		font-weight: 600;
 	}
 
-	.mid {
-		display: flex;
-		justify-content: center;
-		margin-top: 1.5rem;
-	}
-
-	.lesson-button {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		background: rgb(226 192 72 / 10%);
-		padding: 0.5rem 1rem;
-		border-radius: 8px;
-		text-decoration: none;
-		color: #bea13b;
-		font-weight: 600;
-		transition: all 0.2s;
-		border: 2px solid rgba(226, 192, 72, 0.4);
-		max-width: fit-content;
-	}
-
-	.lesson-button:hover {
-		background: rgb(226 192 72 / 18%);
-		transform: translateY(-2px);
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-	}
-
+	
 	svg {
 		display: block;
 		width: 9px;

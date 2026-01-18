@@ -15,19 +15,17 @@
 
 <div class="lesson-container">
 	<div class="lesson-header">
-		<a href="/lær" class="back-link">
-			← Back to Learning
-		</a>
-		<h1>In the very beginning...</h1>
+		<h1>Writing in code...</h1>
 	</div>
 
 	<div class="content-area">
 		<BookComponent bind:currentPage>
 
 			<Page>
-				<h2>... well a bit later actually</h2>
-				<p>As everyone knows, <ref name="caesar">Cæsar wrote messages</ref> in code. To read the message it had to be <em>decoded</em>.</p>
-				<p>The message was <em>encoded</em>, not <em>encrypted</em>.</p>
+				<h2>...is not enctyption</h2>
+				<p>Runes were secret, but not <em>encryption</em>.</p>
+				<p>Encoding is like a recipie. It may be secret, but if someone figures it out, they can make as make cakes as they want.</p>
+				<p>Encryption requires a secret ingredient, and the recipie can be open.</p>
 				<p>Writing <code>"ABBA"</code> as <code>1,2,2,1</code>, <code>NOON</code> or <code>QUJCQQ==</code> is <em>not</em> encryption. </p>
 				<p>The last is easily spotted as <ref name="base64">base64 encoding</ref> by the trailing equal signs. And easily decoded, without a secret key.</p>
 				
@@ -42,7 +40,7 @@
 						<li><i>base64 is not encryption</i></li>
 						<li><i>base64 is not encryption</i></li>
 					</ul>
-				<p><todo>"decode" b64 QkFCQQ== to BABA to gain first Skill</todo></p>
+				<p><todo>"decode" b64 QkFCQQ== to BABA to gain first Encoding Skill</todo></p>
 			</Page>
 
 		</BookComponent>
