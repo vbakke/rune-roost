@@ -34,7 +34,7 @@
 	let sharedNumber: number = $state(Math.floor(Math.random() * 90) + 10);
 	let digits = $derived(String(sharedNumber).split(''));
 	let checksum = $derived(digits.reduce((sum, digit) => sum + parseInt(digit), 0));
-	let hashLeft = $derived(message.plain.substring(0, message.plain.length / 2));
+	let hashLeft = $derived(message.plain.substring(0, message.plain.length / 2 + 0.5));
 	let hashRight = $derived(message.plain.substring(hashLeft.length));
 	let hash = $derived(CaesarHash.hash(hashLeft, hashRight));
 </script>

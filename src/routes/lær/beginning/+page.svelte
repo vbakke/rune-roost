@@ -2,14 +2,14 @@
 	import BookComponent from '$lib/components/BookComponent.svelte';
 	import Page from '$lib/components/Page.svelte';
 	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
+    import { Message } from '$lib/model/Message.ts';
 
 	const ABBA: string = 'ABBA';
 	const BOY: string = 'BOY';
 
 	let currentPage = $state(0);
 	let secretKey: number = $state(2);
-	let alphabet: string = 'ABCDEFGHIKLMNOPQRSTVXYZ';
-	// let alphabet: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	let alphabet: string = Message.ROMAN_ALPHABET;
 	let shiftedAlphabet: string = shifted();
 
 	function onShiftAlphabet(e: Event, direction: number) {
@@ -103,7 +103,9 @@
 					it is possible to define this as <ref name="encryption">encryption</ref>, and not just an <ref name="encoding">encoding</ref>.
 				</p>
 				
+				{#if alphabet.length == 23}
 				<p><i>(Note. Julius had only 23 letters in his alphabet)</i></p>
+				{/if}
 
 			</Page>
 
