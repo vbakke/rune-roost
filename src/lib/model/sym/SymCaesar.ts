@@ -1,4 +1,5 @@
 import { CaesarRot } from "$lib/methods/CaesarRot.ts";
+import { CryptoRandom } from "$lib/methods/CryptoRnd.ts";
 import { Message } from "../Message.ts";
 import type { SymmetricEncryption } from "./SymmetricEncryption.ts";
 
@@ -6,7 +7,7 @@ export class SymCaesar implements SymmetricEncryption
 {
     generateKey(): Message {
         const len: number = Message.ROMAN_ALPHABET.length - 1;
-        const index = Math.floor(Math.random() * len) + 1; // Avoid 'A' as secret key
+        const index = CryptoRandom.random(len) + 1; // Avoid 'A' as secret key
         return new Message(Message.ROMAN_ALPHABET[index]);
     }
 
