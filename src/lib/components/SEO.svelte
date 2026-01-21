@@ -10,7 +10,7 @@
 	}
 
 	let {
-		title = 'Rune Roost - Learn Encryption in a Gamified Way',
+		title = 'Which Encrypt - Learn Encryption in a Gamified Way',
 		description = 'Master encryption concepts through interactive learning. Explore symmetric encryption, asymmetric encryption, and hashing in a fun, gamified experience designed for programmers and beginners.',
 		keywords = 'encryption, cryptography, learn encryption, symmetric encryption, asymmetric encryption, hashing, programming education, gamified learning, cybersecurity',
 		image = '/og-image.svg',
@@ -21,7 +21,7 @@
 
 	import { page } from '$app/stores';
 
-	const fullTitle = title.includes('Rune Roost') ? title : `${title} | Rune Roost`;
+	const fullTitle = title.includes('Which Encrypt') ? title : `${title} | Which Encrypt`;
 	
 	// Build base URL from current page
 	const baseUrl = $page.url.origin;
@@ -47,7 +47,7 @@
 	<meta property="og:title" content={fullTitle} />
 	<meta property="og:description" content={description} />
 	<meta property="og:image" content={fullImageUrl} />
-	<meta property="og:site_name" content="Rune Roost" />
+	<meta property="og:site_name" content="Which Encrypt" />
 	<meta property="og:locale" content="en_US" />
 
 	<!-- Twitter -->
@@ -60,7 +60,7 @@
 	<!-- Additional SEO -->
 	<meta name="robots" content="index, follow" />
 	<meta name="language" content="English" />
-	<meta name="author" content="Rune Roost" />
+	<meta name="author" content="Which Encrypt" />
 
 	<!-- Structured Data -->
 	{#if structuredData}

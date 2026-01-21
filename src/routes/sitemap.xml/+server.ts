@@ -1,13 +1,14 @@
 export const prerender = true;
 
 export async function GET({ url }) {
-	const website = url.origin;
+	const website = url.origin.startsWith('http://sveltekit-prerender') ? 'https://which-encrypt.dev' : url.origin;
 	
 	// Page definitions for the sitemap
 	const pages = [
 		{ url: '', changefreq: 'weekly', priority: '1.0' },
 		{ url: 'wīsdōm', changefreq: 'weekly', priority: '0.9' },
-		{ url: 'lær', changefreq: 'weekly', priority: '0.9' },
+		{ url: 'lær/beginning', changefreq: 'weekly', priority: '0.9' },
+		{ url: 'training', changefreq: 'weekly', priority: '0.9' },
 		{ url: 'lær/symmetric', changefreq: 'weekly', priority: '0.8' },
 		{ url: 'lær/asymmetric', changefreq: 'weekly', priority: '0.8' },
 		{ url: 'lær/hashing', changefreq: 'weekly', priority: '0.8' }

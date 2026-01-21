@@ -10,7 +10,7 @@
 	const structuredData = {
 		'@context': 'https://schema.org',
 		'@type': 'WebApplication',
-		name: 'Rune Roost',
+		name: 'Which Encrypt',
 		description: 'Learn encryption in a gamified way - for programmers and novices',
 		applicationCategory: 'EducationalApplication',
 		operatingSystem: 'Web',
@@ -27,7 +27,7 @@
 </script>
 
 <SEO
-	title="Rune Roost - Learn Encryption in a Gamified Way"
+	title="Which Encrypt - Learn Encryption in a Gamified Way"
 	description="Master encryption concepts through interactive learning. Start your journey with symmetric encryption, asymmetric encryption, and hashing."
 	keywords="learn encryption, cryptography tutorial, encryption for beginners, gamified learning, symmetric encryption, asymmetric encryption, hashing"
 	{structuredData}
@@ -74,7 +74,7 @@
 
 		<article>
 			<p>
-				Welcome to Rune Roost! Learn how encryption works in a fun and interactive way. 
+				Welcome to Which Encrypt! Learn how encryption works in a fun and interactive way. 
 				From the basic principles, to the common pitfalls every programmer should know.
 			</p>
 			<figure class="wrap-image">

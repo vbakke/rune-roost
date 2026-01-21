@@ -36,7 +36,7 @@
 		description: 'Interactive skill tree for learning encryption concepts including symmetric encryption, asymmetric encryption, and hashing',
 		provider: {
 			'@type': 'Organization',
-			name: 'Rune Roost'
+			name: 'Which Encrypt',
 		},
 		educationalLevel: 'Beginner to Intermediate',
 		hasCourseInstance: [

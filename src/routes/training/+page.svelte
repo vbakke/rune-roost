@@ -99,7 +99,7 @@
 
 			<div class="key">
 				<div class="key-icon gold">🔑</div>
-				<div class="key-value">{symmetricKey.plain}</div>
+				<div class="key-value"><span class="plus">⊕</span> <span class="digit">{symmetricKey.plain}</span></div>
 			</div>
 
 			<div class="arrow">→</div>
@@ -148,7 +148,7 @@
 
 			<div class="key">
 				<div class="key-icon silver">🔑</div>
-				<div class="key-value">{asymmetricKeyPair.publicKey.plain}</div>
+				<div class="key-value"><span class="plus">⊕</span> <span class="digit">{asymmetricKeyPair.publicKey.plain}</span></div>
 			</div>
 
 			<div class="arrow">→</div>
@@ -301,10 +301,7 @@
 		flex-direction: row;
 		align-items: center;
 		gap: 0.75rem;
-		background: rgba(255, 255, 255, 0.7);
 		padding: 0.75rem 1rem;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 	}
 
 	.desk-icon {
@@ -336,6 +333,13 @@
 		outline: none;
 		border-bottom-color: #764ba2;
 	}
+
+	.desk.scribe {
+		background: rgba(255, 255, 255, 0.7);
+		border-radius: 8px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	}
+
 	.desk.scribe:hover {
 		background: rgba(255, 255, 255, 0.9);
 		transform: translateY(-2px);
@@ -373,12 +377,18 @@
 	}
 	
 	.key-value {
-		font-size: 1.4rem;
+		display: flex;
+		align-items: center;
 		font-weight: bold;
 		color: #ecdfff;
-		background: rgba(0, 0, 0, 0.2);
+		/* background: rgba(0, 0, 0, 0.2); */
 		padding: 0.25rem 0.75rem;
+	}
+	.key-value, .hash-function {
 		border-radius: 8px;
+		gap: 4px;
+		/* background-color: #5654a4; */
+		background: rgba(0, 0, 0, 0.2);
 	}
 
 	.lesson {
@@ -439,8 +449,7 @@
 	}
 
 
-	.lesson-button .key-icon,
-	.lesson-button .key-value {
+	.lesson-button .key-icon {
 		font-size: 0.8rem;
 	}
 	
@@ -450,19 +459,14 @@
 		font-weight: bold;
 	}
 
-	.desk.hash-function {
-		background-color: #5654a4;
-		gap: 3px;
-	}
-
 	.digit {
-		font-size: 1.2rem;
+		font-size: 1.6em;
 		font-weight: bold;
 		color: #ecdfff;
 	}
 
 	.plus {
-		font-size: 0.7rem;
+		font-size: 0.7em;
 		color: #ecdfff;
 		font-weight: bold;
 	}
@@ -476,7 +480,7 @@
 
 		.encryption-flow {
 			display: flex;
-			
+			justify-content: center;			
 			gap: 1rem;
 		}
 
