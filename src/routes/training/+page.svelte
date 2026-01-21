@@ -32,11 +32,11 @@
 
 	// ---- Hashing section ----
 	let sharedNumber: number = $state(Math.floor(Math.random() * 90) + 10);
-	let digits = $derived(String(sharedNumber).split(''));
+	let digits = $derived(String(message.plain).split(''));
 	let checksum = $derived(digits.reduce((sum, digit) => sum + parseInt(digit), 0));
 	let hashLeft = $derived(message.plain.substring(0, message.plain.length / 2 + 0.5));
 	let hashRight = $derived(message.plain.substring(hashLeft.length));
-	let hash = $derived(CaesarHash.hash(hashLeft, hashRight));
+	let hash = $derived(CaesarHash.hash(message));
 </script>
 
 <div class="container">
@@ -155,16 +155,12 @@
 			</div>
 
 			<div class="desk hash-function">
-
-				<span class="digit">{hashLeft}</span>
-				<span class="plus">⊕</span>
-				<span class="digit">{hashRight}</span>
-				<!-- {#each digits as digit, i}
+				{#each digits as digit, i}
 					<span class="digit">{digit}</span>
 					{#if i < digits.length - 1}
 					<span class="plus">⊕</span>
 					{/if}
-				{/each} -->
+				{/each}
 			</div>
 
 			<div class="arrow">→</div>
@@ -374,16 +370,17 @@
 
 	.desk.hash-function {
 		background-color: #5654a4;
+		gap: 3px;
 	}
 
 	.digit {
-		font-size: 1.75rem;
+		font-size: 1.2rem;
 		font-weight: bold;
 		color: #ecdfff;
 	}
 
 	.plus {
-		font-size: 1.25rem;
+		font-size: 0.7rem;
 		color: #ecdfff;
 		font-weight: bold;
 	}

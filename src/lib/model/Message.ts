@@ -18,6 +18,10 @@ export class Message {
         // this.type = type;
     }
 
+    toString(): string {
+        return this.plain;
+    }
+    
     get encoded(): string {
         // For now, return plain text. Can be extended for Base64, Hex, etc.
         return this.plain;

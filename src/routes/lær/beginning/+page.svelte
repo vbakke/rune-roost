@@ -81,26 +81,32 @@
 
 			<Page>
 				<h2>... well a bit later actually,</h2>
-				<p>Julius Cæsar, as everyone knows, <em>"encrypted"</em> messages to his generals by 
-					<em>rotating</em> the alphabet.</p>
-				<p class="tight-lines">
-					<code>{ alphabet }</code><br/>
-					<code>{ shiftedAlphabet }</code> secret key: <code>{ secretKeyIdentifier(secretKey) }</code><br/>
-					<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
-						<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
-							<path d="M 6 12 L 12 4 M 6 12 L 12 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-						</svg>
-					</button>
-					<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>
-						<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
-							<path d="M 12 12 L 6 4 M 12 12 L 6 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-						</svg>
-					</button>
+				<p>
+					Julius Cæsar, as everyone knows, <em>"encrypted"</em> messages to his generals by 
+					<em>rotating</em> the alphabet.
 				</p>
+				<div class="alaphabet-rot">
+					<code>{ alphabet }</code>
+					<code>{ shiftedAlphabet }</code>
+					<span class="secret-key">secret key: <code>{ secretKeyIdentifier(secretKey) }</code></span>
+					<div class="buttons">
+						<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
+							<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
+								<path d="M 11 4 L 5 12 L 11 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</button>
+						<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>
+							<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
+								<path d="M 7 4 L 13 12 L 7 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</button>
+					</div>
+				</div>
 
 				<p>
-					Since the method  allows for a <ref name="secret-key">secret keys</ref>,
-					it is possible to define this as <ref name="encryption">encryption</ref>, and not just an <ref name="encoding">encoding</ref>.
+					Since this method  requires a <ref name="secret-key">secret keys</ref>,
+					it is possible to define this as <ref name="encryption">encryption</ref>,
+					and not just an <ref name="encoding">encoding</ref>.
 				</p>
 				
 				{#if alphabet.length == 23}
@@ -252,12 +258,32 @@
 		justify-content: center;
 		margin-top: 1.5rem;
 	}
+	
+	.alaphabet-rot {
+		display: grid;
+		grid-template-columns: 1.6fr 1fr;
+		justify-items: center;
+		margin-bottom: 1rem;
+	}
+
+	.alaphabet-rot .buttons {
+		margin-top: 0.3rem;
+	}
+	.alaphabet-rot button {
+		margin: 0 0.3rem;
+	}
+	
+	.alaphabet-rot .secret-key {
+		font-size: 0.8rem;
+		grid-column: 2;
+		grid-row: 1 / 3;
+	}
 
 	.lesson-button {
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		background: rgb(226 192 72 / 10%);
+		background: rgb(226 192 72 / 20%);
 		padding: 0.5rem 1rem;
 		border-radius: 8px;
 		text-decoration: none;
@@ -276,8 +302,8 @@
 
 	svg {
 		display: block;
-		width: 9px;
-		height: 12px;
+		width: 12px;
+		height: 18px;
 		fill: #5d3a1a;
 	}
 

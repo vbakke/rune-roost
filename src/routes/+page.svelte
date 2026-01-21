@@ -71,6 +71,35 @@
 				<path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg>
 		</button>
+
+		<article>
+			<p>
+				Welcome to Rune Roost! Learn how encryption works in a fun and interactive way. 
+				From the basic principles, to the common pitfalls every programmer should know.
+			</p>
+			<figure class="wrap-image">
+				<img src="./never_roll.png" alt="Never roll your own encryption" />
+				<figcaption>- Never roll your own</figcaption>
+			</figure>
+			<p class="highlight">
+				<em>"Never roll your own encryption"</em><br/> 
+				- But even ready-mades can be used incorrectly! Learn the pitfalls!
+			</p>
+			<p>
+				You will start as a novice, and choose your own path to evolve your skills.
+				There is a mix of theory and practical exercises. If your already an export,
+				use the <em>leap frog</em> to speed up your skill tree.
+			</p>
+			<p>
+				We cover symmetric encryption, asymmetric encryption, hashing algorithms,
+				 both fast hassing and password hashing. See what encoding really is. 
+				 And learn the pitfalls of AES encyrption modes when using AES GCM, and which 
+				 AES mode is good for what. 
+			</p>
+			<p>
+				 And what will quantum computers break...?
+			</p>
+		</article>
 	</div>
 
 	<div class="background-decoration">
@@ -98,6 +127,53 @@
 		max-width: 500px;
 		width: 100%;
 		animation: fadeIn 1s ease-out;
+	}
+
+	article {
+		margin-top: 10rem;
+	}
+
+	article p {
+		font-size: 1rem;
+		line-height: 1.6;
+		color: var(--text-primary);
+		margin-bottom: 2rem;
+		text-align: left;
+	}
+
+	.wrap-image {
+		float: right;
+		margin-left: 1.5rem;
+		margin-bottom: 1rem;
+		max-width: 166px;
+		width: 100%;
+	}
+
+	.wrap-image img {
+		width: 100%;
+		height: auto;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		display: block;
+	}
+
+	.wrap-image figcaption {
+		margin-top: 0.5rem;
+		font-size: 0.875rem;
+		color: var(--text-secondary);
+		text-align: center;
+		font-family: "Fondamento", cursive;
+		font-style: italic;
+	}
+
+	.highlight {
+		background: linear-gradient(135deg, rgba(96, 165, 250, 0.08), rgba(167, 139, 250, 0.08));
+		border-left: 4px solid var(--accent-blue);
+		padding: 1.25rem 1.5rem;
+		border-radius: 0 8px 8px 0;
+		margin: 2rem 0;
+		box-shadow: 0 2px 8px rgba(96, 165, 250, 0.1);
+		font-size: 1.15rem;
 	}
 
 	.logo-container {
