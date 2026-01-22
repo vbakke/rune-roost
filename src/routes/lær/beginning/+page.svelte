@@ -125,13 +125,15 @@
 				<p>Encrypting<br/>{ABBA}: <code>{ABBA} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(ABBA), secretKey))}</code> <br/>
 				    And {BOY}: <code>{BOY} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(BOY), secretKey))}</code> <br/>
 				</p>
-				<h3>Decrypt</h3>
-				<p>To decrypt, we just reverse the operation:<br/>
-					<code>{decode(encrypt(encode(ABBA), secretKey))} ⊖ {secretKeyIdentifier(secretKey)} = {ABBA}</code> 
-				</p>
-				<p>Reverse <em>the operation</em>.<br/>
-					But use <em>the same secret key</em>.
-				</p>
+				<div class="blur">
+					<h3>Decrypt</h3>
+					<p>To decrypt, we just reverse the operation:<br/>
+						<code>{decode(encrypt(encode(ABBA), secretKey))} ⊖ {secretKeyIdentifier(secretKey)} = {ABBA}</code> 
+					</p>
+					<p>Reverse <em>the operation</em>.<br/>
+						But use <em>the same secret key</em>.
+					</p>
+				</div>
 			</Page>
 
 			<Page>
@@ -277,6 +279,7 @@
 		font-size: 0.8rem;
 		grid-column: 2;
 		grid-row: 1 / 3;
+		align-self: end;
 	}
 
 	.lesson-button {
@@ -290,8 +293,9 @@
 		color: #bea13b;
 		font-weight: 600;
 		transition: all 0.2s;
-		border: 2px solid rgba(226, 192, 72, 0.4);
 		max-width: fit-content;
+		border: 2px solid rgba(226, 192, 72, 0.4);
+		box-shadow: 1px 2px 1px #ad9530;
 	}
 
 	.lesson-button:hover {

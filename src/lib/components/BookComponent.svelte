@@ -13,6 +13,7 @@
 	let startX = $state(0);
 	let currentX = $state(0);
 	let dragThreshold = 50;
+	let isBumping = $state(false);
 	
 	// Track visible pages using a container element
 	let containerDiv: HTMLDivElement;
@@ -28,6 +29,9 @@
 			pages.forEach((page, index) => {
 				page.classList.remove('active-left', 'active-right');
 				
+				// Add page number as data attribute
+				(page as HTMLElement).dataset.pageNumber = String(index + 1);
+				
 				// Add classes for visible pages
 				if (index === currentPage - 1) {
 					page.classList.add('active-left');
@@ -41,38 +45,55 @@
 	function nextPage() {
 		if (currentPage < pageCount - 1) {
 			currentPage++;
+		} else {
+			bumpPage();
 		}
 	}
 
 	function prevPage() {
 		if (currentPage > 0) {
 			currentPage--;
+		} else {
+			bumpPage();	
 		}
 	}
 
+	function bumpPage() {
+		// Simple visual feedback for trying to go past first/last page
+		isBumping = true;
+		setTimeout(() => {
+			isBumping = false;
+		}, 300);
+	}
+
 	function handleTouchStart(e: TouchEvent) {
-		isDragging = true;
+		isDragging = false;
 		startX = e.touches[0].clientX;
+		console.log(`touchStart: startX=${startX} (currentX=${currentX})`);
 	}
 
 	function handleTouchMove(e: TouchEvent) {
-		if (!isDragging) return;
+		isDragging = true;
 		currentX = e.touches[0].clientX;
+		console.log(`touchMove: (startX=${startX}) currentX=${currentX}`);
 	}
 
 	function handleTouchEnd() {
-		if (!isDragging) return;
-		
-		const diff = startX - currentX;
-		if (Math.abs(diff) > dragThreshold) {
-			if (diff > 0) {
-				nextPage();
-			} else {
-				prevPage();
+		if (isDragging) {	
+			const diff = startX - currentX;
+			console.log(`touchEnd: startX=${startX} currentX=${currentX} = diff=${diff}`);
+			if (Math.abs(diff) > dragThreshold) {
+				if (diff > 0) {
+					nextPage();
+				} else {
+					prevPage();
+				}
 			}
 		}
 		
 		isDragging = false;
+		startX = 0;
+		currentX = 0;
 	}
 
 	function handleMouseDown(e: MouseEvent) {
@@ -145,77 +166,76 @@
 	<!-- Book pages -->
 	<div 
 		class="book" 
-		role="region" 
+		role="button"
+		tabindex="0"
 		aria-label="Book pages"
-		on:touchstart={handleTouchStart}
-		on:touchmove={handleTouchMove}
-		on:touchend={handleTouchEnd}
-		on:mousedown={handleMouseDown}
-		on:mousemove={handleMouseMove}
-		on:mouseup={handleMouseUp}
-		on:mouseleave={handleMouseUp}
+		ontouchstart={handleTouchStart}
+		ontouchmove={handleTouchMove}
+		ontouchend={handleTouchEnd}
+		onmousedown={handleMouseDown}
+		onmousemove={handleMouseMove}
+		onmouseup={handleMouseUp}
+		onmouseleave={handleMouseUp}
 	>
 		<!-- Pages container - all pages rendered, visibility controlled by CSS -->
-		<div bind:this={containerDiv} class="pages-container">
+		<div bind:this={containerDiv} class="pages-container" class:bump={isBumping}>
 			{@render children()}
 		</div>
-	</div>
 
-	<!-- Dog-ear navigation overlays -->
-	{#if currentPage > 0}
+		<!-- Dog-ear navigation overlays -->
 		<button 
-			class="dog-ear left" 
-			on:click={prevPage}
+		class="dog-ear left" 		
+			onclick={prevPage}
 			aria-label="Previous page"
 		>
-			<svg viewBox="0 0 30 30" fill="currentColor">
-				<path d="M 0,0 L 0,30 L 30,30 Z" />
+			<svg class="{(currentPage <= 0) ? 'hidden' : ''}" viewBox="0 0 30 30" fill="currentColor">
+				<path d="M 0,0 L 0,30 L 30,30 Z M 4,23 l 6,-3 l 0,2 l 4,0 l 0,2 l -4,0 l 0,2 Z" />
 			</svg>
 		</button>
-	{/if}
-	
-	{#if currentPage < pageCount - 1}
 		<button 
 			class="dog-ear right" 
-			on:click={nextPage}
+			onclick={nextPage}
 			aria-label="Next page"
 		>
-			<svg viewBox="0 0 30 30" fill="currentColor">
-				<path d="M 30,0 L 0,30 L 30,30 Z" />
+			<svg class="{(currentPage >= pageCount - 1) ? 'hidden' : ''}" viewBox="0 0 30 30" fill="currentColor">
+				<path d="M 30,30 L 0,30 L 30,0 Z  M 26,23 l -6,-3 l 0,2 l -4,0 l 0,2 l 4,0 l 0,2 Z" />
 			</svg>
 		</button>
-	{/if}
+	</div>
 
-	<!-- Navigation buttons (mobile-friendly) -->
+	<!-- Navigation buttons (mobile-friendly)
 	<div class="nav-buttons">
 		<button 
-			on:click={prevPage} 
+			onclick={prevPage} 
 			disabled={currentPage === 0}
 			aria-label="Previous page"
 		>
 			← Previous
 		</button>
-		<!-- Progress indicator -->
+		<!-- Progress indicator - ->
 		<div class="page-progress">
 			Page {currentPage + 1} of {pageCount}
 		</div>
 		<button 
-			on:click={nextPage} 
+			onclick={nextPage} 
 			disabled={currentPage >= pageCount - 1}
 			aria-label="Next page"
 		>
 			Next →
 		</button>
-	</div>
+	</div> -->
 </div>
 
 <style>
+	:root {
+		--book-margin: 0.5rem;
+	}
 	.book-container {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 1.5rem;
-		padding: 1rem;
+		padding: var(--book-margin);
 		max-width: 815px;
 		margin: 0 auto;
 		position: relative;
@@ -230,7 +250,9 @@
 
 	.book {
 		display: flex;
-		background: linear-gradient(to bottom, #8b4513, #654321);
+		/* background: linear-gradient(to bottom, #8b4513, #654321); */
+		background: linear-gradient(to right, #4f2c02 0%, transparent 1%, transparent 99%, #4f2c02), linear-gradient(to bottom, #4f2c02, transparent 1%, transparent 99%, #4f2c02), linear-gradient(to bottom, #8b4513, #654321);
+		padding: var(--book-margin);
 		border-radius: 8px;
 		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 		overflow: hidden;
@@ -264,14 +286,14 @@
 	.pages-container :global([data-page-marker].active-left) {
 		display: block;
 		grid-column: 1;
-		border-right: 1px solid rgba(139, 69, 19, 0.2);
+		background: linear-gradient(to right, rgb(229 225 206) 0%, #00000000 3%, #00000000 93%, #00000011 96%, #00000033), linear-gradient(to bottom, #fefcf5, #f5f3e8);
 	}
 
 	/* Show next page on right side */
 	.pages-container :global([data-page-marker].active-right) {
 		display: block;
 		grid-column: 2;
-		border-left: 1px solid rgba(139, 69, 19, 0.2);
+		background: linear-gradient(to left, rgb(229 225 206) 0%, #00000000 3%, #00000000 93%, #00000011 96%, #00000033), linear-gradient(to bottom, #fefcf5, #f5f3e8);
 	}
 
 	/* Styling for page content */
@@ -279,6 +301,30 @@
 		font-family: 'Georgia', serif;
 		color: #333;
 		line-height: 1.8;
+		position: relative;
+	}
+
+	/* Page number at bottom of each page */
+	.pages-container :global([data-page-marker]::after) {
+		content: "~ " attr(data-page-number) " ~";
+		position: absolute;
+		bottom: 1rem;
+		left: 50%;
+		transform: translateX(-50%);
+		text-align: center;
+		font-size: 0.6em;
+		color: #8b4513;
+		font-family: 'Georgia', serif;
+	}
+
+	/* Left page number on left */
+	.pages-container :global([data-page-marker].active-left::after) {
+		/* left: 2rem; */
+	}
+
+	/* Right page number on right */
+	.pages-container :global([data-page-marker].active-right::after) {
+		/* right: 2rem; */
 	}
 
 	.pages-container :global([data-page-marker] h1) {
@@ -361,14 +407,14 @@
 	}
 
 	.dog-ear.left {
-		bottom: 7rem;
-		left: 8px;
+		bottom: var(--book-margin);
+		left: var(--book-margin);
 		color: #d0c8b0;
 	}
 	
 	.dog-ear.right {
-		bottom: 7rem;
-		right: 8px;
+		bottom: var(--book-margin);
+		right: var(--book-margin);
 		color: #d0c8b0;
 	}
 
@@ -379,6 +425,11 @@
 
 	.dog-ear:active {
 		transform: scale(1);
+	}
+
+	.dog-ear .hidden {
+		fill: transparent;
+		pointer-events: all;
 	}
 
 	.nav-buttons {
@@ -410,30 +461,60 @@
 		cursor: not-allowed;
 	}
 
+	.pages-container.bump {
+		animation: bump 0.3s ease-out;
+	}
+
+	@keyframes bump {
+		0%, 100% {
+			transform: translateX(0);
+		}
+		25% {
+			transform: translateX(0.3rem);
+		}
+		50% {
+			transform: translateX(-0.3rem);
+		}
+		75% {
+			transform: translateX(0.1rem);
+		}
+		100% {
+			transform: translateX(0);
+		}
+	}
+	
 	/* Mobile responsiveness */
 	@media (max-width: 768px) {
-		.book {
-			padding: 1rem;
+		.book-container {
+			padding: 0.5rem;
 		}
 
 		.pages-container {
-			grid-template-columns: 400px;
+			grid-template-columns: 1fr;
+			min-height: 400px;
 		}
 
 		/* On mobile, only show current page */
 		.pages-container :global([data-page-marker].active-left) {
 			display: none;
 		}
+
 		.pages-container :global([data-page-marker].active-right) {
 			grid-column: 1;
 		}
 
-		.dog-ear.right {
+		.pages-container :global([data-page-marker]) {
+			padding: 1.5rem;
+		}
+
+		/* .dog-ear.right {
 			right: 1rem;
+			bottom: 1rem;
 		}
 
 		.dog-ear.left {
 			left: 1rem;
-		}
+			bottom: 1rem;
+		} */
 	}
 </style>
