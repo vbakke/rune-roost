@@ -3,9 +3,6 @@
 	import QuillIcon from '$lib/components/icons/QuillIcon.svelte';
 	import ScrollIcon from '$lib/components/icons/ScrollIcon.svelte';
 	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
-	import PlainText from '$lib/components/PlainText.svelte';
-	import Key from '$lib/components/Key.svelte';
-	import CipherText from '$lib/components/CipherText.svelte';
 	import { Message } from '$lib/model/Message.ts';
 	import type { SymmetricEncryption } from '$lib/model/sym/SymmetricEncryption.ts';
 	import type { AsymmetricEncryption } from '$lib/model/asym/AsymmetricEncryption.ts';
@@ -81,7 +78,7 @@
 			Tree of Knowledge
 		</a>
 		<h1>Læran - Encryption Concepts</h1>
-		<div></div>
+		<div/>
 	</div>
 
 	<!-- Symmetric Pane -->
@@ -90,17 +87,28 @@
 			<h2>Symmetric</h2>
 		</div>
 		<div class="encryption-flow">
-			<PlainText bind:value={userInput} />
+			<div class="desk scribe">
+				<input
+					class="desk-input"
+					bind:value={userInput}
+					size="{userInput.length || 1}"
+				/>
+				<div class="desk-icon">
+                    <QuillIcon />
+				</div>
+			</div>
 
-			<Key 
-				value={symmetricKey.plain} 
-				type="gold" 
-				onclick={() => symmetricKey = CaesarRot.rotateStringForward(symmetricKey.plain, 'B')} 
-			/>
+			<div class="key">
+				<div class="key-icon gold"><a onclick={() => symmetricKey = CaesarRot.rotateStringForward(symmetricKey.plain, 'B')}>🔑</a></div>
+				<div class="key-value"><span class="plus">⊕</span> <span class="digit">{symmetricKey.plain}</span></div>
+			</div>
 
 			<div class="arrow">→</div>
 
-			<CipherText value={symmetricEncrypted.plain} />
+			<div class="desk scroll">
+				<div class="desk-output">{symmetricEncrypted.plain}</div>
+				<div class="desk-icon"><ScrollIcon /></div>
+			</div>
 			<div class="spacer"></div>
 
 			<div class="lesson">
@@ -128,13 +136,28 @@
 			<h2>Asymmetric</h2>
 		</div>
 		<div class="encryption-flow">
-			<PlainText bind:value={userInput} />
+			<div class="desk scribe">
+				<input
+					class="desk-input"
+					bind:value={userInput}
+					size="{userInput.length || 1}"
+				/>
+				<div class="desk-icon">
+					<QuillIcon />
+				</div>
+			</div>
 
-			<Key value={asymmetricKeyPair.publicKey.plain} type="silver" />
+			<div class="key">
+				<div class="key-icon silver">🔑</div>
+				<div class="key-value"><span class="plus">⊕</span> <span class="digit">{asymmetricKeyPair.publicKey.plain}</span></div>
+			</div>
 
 			<div class="arrow">→</div>
 
-			<CipherText value={asymmetricEncrypted} />
+			<div class="desk scroll">
+				<div class="desk-output">{asymmetricEncrypted}</div>
+				<div class="desk-icon"><ScrollIcon /></div>
+			</div>
 			<div class="spacer"></div>
 
 			<div class="lesson">
@@ -164,7 +187,16 @@
 			<h2>Hashing</h2>
 		</div>
 		<div class="encryption-flow">
-			<PlainText bind:value={userInput} />
+			<div class="desk scribe">
+				<input
+					bind:value={userInput}
+					size="{userInput.length || 1}"
+					class="desk-input"
+				/>
+				<div class="desk-icon">
+					<QuillIcon />
+				</div>
+			</div>
 
 			<div class="desk hash-function">
 				{#each digits as digit, i}
@@ -177,7 +209,10 @@
 
 			<div class="arrow">→</div>
 
-			<CipherText value={hash.plain} />
+			<div class="desk scroll">
+				<div class="desk-output">{hash.plain}</div>
+				<div class="desk-icon"><ScrollIcon /></div>
+			</div>
 			<div class="spacer"></div>
 			<a href="/lær/hashing" class="lesson-button">
 				<RavenIcon />
@@ -262,28 +297,99 @@
 		flex-wrap: wrap;
 	}
 
-	.hash-function {
+	.desk {
 		display: flex;		
 		flex-direction: row;
 		align-items: center;
 		gap: 0.75rem;
 		padding: 0.75rem 1rem;
+	}
+
+	.desk-icon {
+		font-size: 2rem;
+		display: flex;
+		align-items: center;
+	}
+
+	.desk-input,
+	.desk-output {
+		font-size: 2rem;
+		font-weight: bold;
+		text-align: center;
+		min-width: 80px;
+		/* width: 100%; */
+		flex: 0 0 auto;
+		/* width: auto; */
+		border: none;
+		background: transparent;
+		color: #333;
+	}
+
+	.desk-input {
+		border-bottom: 2px solid #667eea;
+		padding: 0.25rem;
+	}
+
+	.desk-input:focus {
+		outline: none;
+		border-bottom-color: #764ba2;
+	}
+
+	.desk.scribe {
+		background: rgba(255, 255, 255, 0.7);
+		border-radius: 8px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	.desk.scribe:hover {
+		background: rgba(255, 255, 255, 0.9);
+		transform: translateY(-2px);
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	}
+
+	.desk.scroll {
+		cursor: default;
+		background-color: #8574e3;
+	}
+
+	.key {
+		cursor: default;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
+	.key-icon {
+		font-size: 2rem;
+	}
+	
+	.key-icon {
+		text-shadow: 
+		1px 1px 3px rgba(0, 0, 0, 0.6),
+		0 0 8px rgba(192, 192, 192, 0.5);
+	}
+	.key-icon.gold {
+		filter: hue-rotate(-15deg) saturate(2) brightness(1.2) contrast(1.2);
+	}
+	
+	.key-icon.silver {
+		filter: grayscale(100%) brightness(1.1) contrast(1.3);
+	}
+	
+	.key-value {
+		display: flex;
+		align-items: center;
+		font-weight: bold;
+		color: #ecdfff;
+		/* background: rgba(0, 0, 0, 0.2); */
+		padding: 0.25rem 0.75rem;
+	}
+	.key-value, .hash-function {
 		border-radius: 8px;
 		gap: 4px;
 		/* background-color: #5654a4; */
 		background: rgba(0, 0, 0, 0.2);
-	}
-
-	.hash-function .digit {
-		font-size: 1.6em;
-		font-weight: bold;
-		color: #ecdfff;
-	}
-
-	.hash-function .plus {
-		font-size: 0.7em;
-		color: #ecdfff;
-		font-weight: bold;
 	}
 
 	.lesson {
@@ -338,6 +444,12 @@
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 	}
 
+	.lesson svg {
+		width: 3rem;
+		margin-bottom: 0.5rem;
+	}
+
+
 	.lesson-button .key-icon {
 		font-size: 0.8rem;
 	}
@@ -345,6 +457,18 @@
 	.arrow {
 		font-size: 2.5rem;
 		color: white;
+		font-weight: bold;
+	}
+
+	.digit {
+		font-size: 1.6em;
+		font-weight: bold;
+		color: #ecdfff;
+	}
+
+	.plus {
+		font-size: 0.7em;
+		color: #ecdfff;
 		font-weight: bold;
 	}
 
@@ -363,6 +487,21 @@
 
 		.key {
 			flex-direction: row;
+		}
+
+		.desk {
+			padding: 1rem;
+			width: 100%;
+		}
+
+		.desk-icon {
+			font-size: 2.5rem;
+		}
+
+		.desk-input,
+		.desk-output {
+			font-size: 2rem;
+			min-width: 100px;
 		}
 
 		.arrow {

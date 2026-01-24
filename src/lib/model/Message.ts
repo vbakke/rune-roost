@@ -3,6 +3,7 @@ export enum PlainType { AUTO, DECIMAL, HEX, ROMAN, ASCII, UNICODE, BASE64}
 
 export class Message {
     static ROMAN_ALPHABET: string = 'ABCDEFGHIKLMNOPQRSTVXYZ';
+    // static ROMAN_ALPHABET: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     plain: string;
     type: PlainType;
@@ -21,7 +22,7 @@ export class Message {
     toString(): string {
         return this.plain;
     }
-    
+
     get encoded(): string {
         // For now, return plain text. Can be extended for Base64, Hex, etc.
         return this.plain;
