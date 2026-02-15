@@ -35,6 +35,10 @@
 		asymmetricCipher.encrypt(message, asymmetricKeyPair.publicKey).plain
 	);
 
+	// 6. Decrypt state
+	let showSymmetricDecrypt = $state(false);
+	let symmetricDecrypted = $derived(symmetricCipher.decrypt(symmetricEncrypted, symmetricKey));
+
 	function regenerateSymmetricKey() {
 		regenerateKeysOnDiceRoll(() => {
 			console.log(`${(performance.now()/1000).toFixed(3)}s: Generating new symmetric key`);
@@ -101,6 +105,22 @@
 			<div class="arrow">→</div>
 
 			<CipherText value={symmetricEncrypted.plain} />
+
+			{#if showSymmetricDecrypt}
+				<div class="arrow">→</div>
+
+				<Key 
+					value={symmetricKey.plain} 
+					type="gold" 
+					reverse={true}
+					onclick={() => symmetricKey = CaesarRot.rotateStringForward(symmetricKey.plain, 'B')} 
+				/>
+
+				<div class="arrow">→</div>
+
+				<PlainText value={symmetricDecrypted.plain} icon="eye" readonly={true} />
+			{/if}
+
 			<div class="spacer"></div>
 
 			<div class="lesson">
@@ -109,14 +129,14 @@
 					<DiceIcon />
 				</button>
 
-				<a href="/lær/symmetric" class="lesson-button">
+				<button class="lesson-button" onclick={() => showSymmetricDecrypt = !showSymmetricDecrypt}>
 					<RavenIcon />
 					<div class="key">
 						<div class="key-icon gold">🔑</div>
 						<div class="key-value">{symmetricKey.plain}</div>
 					</div>
-					<span>Decrypt</span>
-				</a>
+					<span>{showSymmetricDecrypt ? 'Hide' : 'Decrypt'}</span>
+				</button>
 			</div>
 
 		</div>

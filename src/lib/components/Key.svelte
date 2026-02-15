@@ -2,10 +2,11 @@
 	interface Props {
 		value: string;
 		type?: 'gold' | 'silver';
+		reverse: boolean;
 		onclick?: () => void;
 	}
 	
-	let { value, type = 'gold', onclick }: Props = $props();
+	let { value, type = 'gold', reverse = false, onclick }: Props = $props();
 </script>
 
 <div class="key">
@@ -16,7 +17,7 @@
 			🔑
 		{/if}
 	</div>
-	<div class="key-value"><span class="plus">⊕</span> <span class="digit">{value}</span></div>
+	<div class="key-value"><span class="plus">{reverse ? '⊖' : '⊕'}</span> <span class="digit">{value}</span></div>
 </div>
 
 <style>
@@ -69,7 +70,7 @@
 	}
 
 	.plus {
-		font-size: 0.7em;
+		font-size: 0.9em;
 		color: #ecdfff;
 		font-weight: bold;
 	}

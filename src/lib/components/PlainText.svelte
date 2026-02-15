@@ -1,12 +1,15 @@
 <script lang="ts">
 	import QuillIcon from './icons/QuillIcon.svelte';
+	import EyeIcon from './icons/EyeIcon.svelte';
 	
 	interface Props {
 		value: string;
 		onchange?: (value: string) => void;
+		icon?: 'quill' | 'eye';
+		readonly?: boolean;
 	}
 	
-	let { value = $bindable(), onchange }: Props = $props();
+	let { value = $bindable(), onchange, icon = 'quill', readonly = false }: Props = $props();
 </script>
 
 <div class="desk scribe">
@@ -14,9 +17,14 @@
 		class="desk-input"
 		bind:value={value}
 		size="{value.length || 1}"
+		{readonly}
 	/>
 	<div class="desk-icon">
-		<QuillIcon />
+		{#if icon === 'eye'}
+			<EyeIcon />
+		{:else}
+			<QuillIcon />
+		{/if}
 	</div>
 </div>
 
@@ -24,6 +32,7 @@
 	.desk {
 		display: flex;		
 		flex-direction: row;
+        justify-content: center;
 		align-items: center;
 		gap: 0.75rem;
 		padding: 0.75rem 1rem;

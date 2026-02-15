@@ -17,6 +17,7 @@
 	.desk {
 		display: flex;		
 		flex-direction: row;
+		justify-content: center;
 		align-items: center;
 		gap: 0.75rem;
 		padding: 0.75rem 1rem;
