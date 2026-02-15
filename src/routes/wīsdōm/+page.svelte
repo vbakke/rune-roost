@@ -7,7 +7,7 @@
 	import EarthRune from '$lib/components/runes/EarthRune.svelte';
 	import DayRune from '$lib/components/runes/DayRune.svelte';
 	import FireRune from '$lib/components/runes/FireRune.svelte';
-	import ScrollIcon from '$lib/components/icons/ScrollIcon.svelte';
+	import QuillIcon from '$lib/components/icons/QuillIcon.svelte';
 	import CannotLearnIcon from '$lib/components/icons/CannotLearnIcon.svelte';
 
 	let selectedSkill: SkillNode | null = null;
@@ -141,7 +141,7 @@
 									{:else if skill.state === 'LEARNT'}
 										<HarvestRune />
 									{:else if skill.realm === 'ENCODING'}
-										<ScrollIcon size="2em" />
+										<QuillIcon size="2em" />
 									{:else}
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
 											<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
@@ -405,7 +405,7 @@
 
 	/* Only CAN_LEARN nodes glow */
 	.skill-node.can-learn .node-circle::before {
-		animation: pulse-ring 2s ease-out infinite;
+		animation: pulse-ring 2s ease-out 6 forwards;
 	}
 
 	.skill-node.can-learn:hover .node-circle::before {

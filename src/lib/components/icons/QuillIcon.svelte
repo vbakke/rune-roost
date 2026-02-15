@@ -1,4 +1,11 @@
-<svg 
+<script lang="ts">
+	interface Props {
+		size?: string;
+	}
+	let { size = '3rem' }: Props = $props();
+</script>
+
+<svg style="width: {size}; height: {size}"
     version="1.1" xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink" 
     viewBox="0 0 35.738 35.738" xml:space="preserve" class="quill-icon">

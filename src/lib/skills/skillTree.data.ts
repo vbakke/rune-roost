@@ -60,19 +60,52 @@ export const skillTree = {
             label: 'Encrypt numbers using RSA',
             dependsOn: ['asym.decrypt'],
         },
-
+        'asym.quantum': {
+            label: 'Quantum attacks',
+            description: 'Learn about how quantum computers can break RSA and other asymmetric encryption schemes.',
+            dependsOn: ['asym.decrypt'],
+        },
     },
     hashing: {
-        'hashing.caesar_sum': {
-            label: 'Cross sum using Caesar cipher',
-            description: 'In this simple example of a hash function, we take the cross sum of a number and then apply a Caesar cipher to it. This is not a secure hash function, but it illustrates the concept of hashing.'
-        },
         'hashing.cross_sum': {
             label: 'Cross sum',
-            description: 'Add up the digits of a number',
-            dependsOn: ['hashing.caesar_sum']
-
+            description: 'In this simple example of a hash function, we take the cross sum of a number and then apply a Caesar cipher to it. This is not a secure hash function, but it illustrates the concept of hashing.'
         },
+        'hashing.mod10': {
+            label: 'Modulo 10',
+            description: 'Common checksum algorithm used in credit card numbers and other identifiers. It sums the digits of a number and then takes the result modulo 10.',
+            dependsOn: ['hashing.cross_sum', 'encoding.decimal']
+        },
+        'hashing.md5': {
+            label: 'MD5',
+            description: 'An early used cryptographic hash function.',
+            dependsOn: ['hashing.mod10', 'encoding.bytes']
+        },
+        'hashing.sha256': {
+            label: 'SHA-256',
+            description: 'A widely used cryptographic hash function.',
+            dependsOn: ['hashing.md5', 'encoding.bytes']
+        },
+        'hashing.attack': {
+            label: 'Hashing Attacks',
+            description: 'Learn about common attacks on hash functions.',
+            dependsOn: ['hashing.mod10']
+        },
+        'hashing.password': {
+            label: 'Password Hashing',
+            description: 'Learn about secure password hashing techniques.',
+            dependsOn: ['hashing.attack']
+        },
+        'hashing.salted': {
+            label: 'Salting Hashes',
+            description: 'Learn about adding salt to hashes for improved security.',
+            dependsOn: ['hashing.attack']
+        },
+        'hashing.slow': {
+            label: 'Slow Hashing',
+            description: 'Learn about using slow hashing functions for password security.',
+            dependsOn: ['hashing.salted']
+        }
     }
 } as const satisfies Record<
     string,
@@ -80,6 +113,7 @@ export const skillTree = {
         string,
         {
             label: string;
+            description?: string;
             dependsOn?: string[];
             uiGates?: UiGate[];
         }
