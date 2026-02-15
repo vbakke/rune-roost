@@ -87,12 +87,12 @@
 			</p>
 			<p>
 				You will start as a novice, and choose your own path to evolve your skills.
-				There is a mix of theory and practical exercises. If your already an export,
+				There is a mix of theory and practical exercises. If your already an expert,
 				use the <em>leap frog</em> to speed up your skill tree.
 			</p>
 			<p>
 				We cover symmetric encryption, asymmetric encryption, hashing algorithms,
-				 both fast hassing and password hashing. See what encoding really is. 
+				 both fast hashing and password hashing. See what encoding really is. 
 				 And learn the pitfalls of AES encyrption modes when using AES GCM, and which 
 				 AES mode is good for what. 
 			</p>

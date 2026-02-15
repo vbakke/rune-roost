@@ -27,7 +27,7 @@
 			Tree of Knowledge
 		</a>
 		<h1>Læran - Encryption Concepts</h1>
-		<div/>
+		<div></div>
 	</div>
 
 	<!-- Symmetric Pane -->

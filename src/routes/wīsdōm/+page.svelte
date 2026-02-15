@@ -2,11 +2,13 @@
 	import '../../app.css';
 	import { goto } from '$app/navigation';
 	import SEO from '$lib/components/SEO.svelte';
-	import { skills, realmColors, type SkillNode } from '$lib/data/skills';
+	import { skills, realmColors, skillLinks, type SkillNode } from '$lib/data/skills';
 	import HarvestRune from '$lib/components/runes/HarvestRune.svelte';
 	import EarthRune from '$lib/components/runes/EarthRune.svelte';
 	import DayRune from '$lib/components/runes/DayRune.svelte';
 	import FireRune from '$lib/components/runes/FireRune.svelte';
+	import ScrollIcon from '$lib/components/icons/ScrollIcon.svelte';
+	import CannotLearnIcon from '$lib/components/icons/CannotLearnIcon.svelte';
 
 	let selectedSkill: SkillNode | null = null;
 
@@ -28,6 +30,30 @@
 	function closePanel() {
 		selectedSkill = null;
 	}
+
+	const positionById = new Map(skills.map((skill) => [skill.id, skill.position]));
+	const dependencyLines = skillLinks
+		.map((link) => {
+			const from = positionById.get(link.fromId);
+			const to = positionById.get(link.toId);
+			if (!from || !to) {
+				return null;
+			}
+
+			return {
+				x1: from.x,
+				y1: from.y,
+				x2: to.x,
+				y2: to.y,
+				color: realmColors[link.realm]
+			};
+		})
+		.filter((line): line is { x1: number; y1: number; x2: number; y2: number; color: string } =>
+			line !== null
+		);
+
+	const encodingSkills = skills.filter((s) => s.realm === 'ENCODING');
+	const mainSkills = skills.filter((s) => s.realm !== 'ENCODING' && s.id !== 'center');
 
 	const structuredData = {
 		'@context': 'https://schema.org',
@@ -78,50 +104,130 @@
 		<h1 class="page-title">Choose Your Path to Wisdom</h1>
 	</header>
 
-	<div class="skill-tree-container">
-		<svg class="connection-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
-			<!-- Lines connecting center to nodes, forming triangle -->
-			<line x1="50" y1="45" x2="15" y2="15" stroke={realmColors.SYMMETRIC} stroke-width="0.3" opacity="0.5" />
-			<line x1="50" y1="45" x2="85" y2="15" stroke={realmColors.ASYMMETRIC} stroke-width="0.3" opacity="0.5" />
-			<line x1="50" y1="45" x2="50" y2="85" stroke={realmColors.HASHING} stroke-width="0.3" opacity="0.5" />
-		</svg>
+	<div class="skill-tree-wrapper">
+		<!-- Encoding Tree (left on desktop, top on mobile) -->
+		<div class="encoding-tree-container">
+			<div class="skill-tree-inner">
+				<svg class="connection-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+					<!-- Encoding internal dependency lines -->
+					{#each dependencyLines as line}
+					{@const fromSkill = skills.find((s) => s.position.x === line.x1 && s.position.y === line.y1)}
+					{@const toSkill = skills.find((s) => s.position.x === line.x2 && s.position.y === line.y2)}
+					{#if fromSkill?.realm === 'ENCODING' && toSkill?.realm === 'ENCODING'}
+								y2={line.y2}
+								stroke={line.color}
+								stroke-width="1.25"
+								opacity="0.9"
+							/>
+						{/if}
+					{/each}
+				</svg>
 
-		<div class="skill-nodes">
-			{#each skills as skill}
-				{#if skill.state !== 'INVISIBLE'}
-					<button
-						class="skill-node"
-						class:learnt={skill.state === 'LEARNT'}
-						class:can-learn={skill.state === 'CAN_LEARN'}
-						class:cannot-learn={skill.state === 'CANNOT_LEARN'}
-						class:selected={selectedSkill?.id === skill.id}
-						style="left: {skill.position.x}%; top: {skill.position.y}%; --node-color: {realmColors[skill.realm]}"
-						onclick={() => selectSkill(skill)}
-					>
-						<div class="node-circle">
-							{#if skill.state === 'CANNOT_LEARN'}
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-									<rect x="7" y="11" width="10" height="9" rx="1" stroke="currentColor" stroke-width="2"/>
-									<path d="M9 11V7a3 3 0 0 1 6 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-								</svg>
-							{:else if skill.state === 'LEARNT'}
+				<div class="skill-nodes">
+					{#each encodingSkills as skill}
+						{#if skill.state !== 'INVISIBLE'}
+							<button
+								class="skill-node"
+								class:learnt={skill.state === 'LEARNT'}
+								class:can-learn={skill.state === 'CAN_LEARN'}
+								class:cannot-learn={skill.state === 'CANNOT_LEARN'}
+								class:selected={selectedSkill?.id === skill.id}
+								style="left: {skill.position.x}%; top: {skill.position.y}%; --node-color: {realmColors[skill.realm]}"
+								onclick={() => selectSkill(skill)}
+							>
+								<div class="node-circle">
+									{#if skill.state === 'CANNOT_LEARN'}
+										<CannotLearnIcon />
+									{:else if skill.state === 'LEARNT'}
+										<HarvestRune />
+									{:else if skill.realm === 'ENCODING'}
+										<ScrollIcon size="2em" />
+									{:else}
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+											<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
+										</svg>
+									{/if}
+								</div>
+								<div class="node-label">{skill.title}</div>
+							</button>
+						{/if}
+					{/each}
+				</div>
+			</div>
+		</div>
+
+		<!-- Main Skill Tree (right on desktop, bottom on mobile) -->
+		<div class="main-tree-container">
+			<div class="skill-tree-inner">
+				<svg class="connection-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+					<!-- Lines connecting center to category nodes -->
+					<line x1="50" y1="50" x2="50" y2="35" stroke={realmColors.SYMMETRIC} stroke-width="0.3" opacity="0.5" />
+					<line x1="50" y1="50" x2="80" y2="35" stroke={realmColors.ASYMMETRIC} stroke-width="0.3" opacity="0.5" />
+					<line x1="50" y1="50" x2="50" y2="85" stroke={realmColors.HASHING} stroke-width="0.3" opacity="0.5" />
+
+					<!-- Lines showing dependency paths (excluding encoding cross-links) -->
+					{#each dependencyLines as line}
+					{@const fromSkill = skills.find((s) => s.position.x === line.x1 && s.position.y === line.y1)}
+					{@const toSkill = skills.find((s) => s.position.x === line.x2 && s.position.y === line.y2)}
+					{#if fromSkill?.realm !== 'ENCODING' && toSkill?.realm !== 'ENCODING'}
+							/>
+						{/if}
+					{/each}
+				</svg>
+
+				<div class="skill-nodes">
+					<!-- Center node -->
+					{#if skills.find((s) => s.id === 'center')}
+						{@const centerSkill = skills.find((s) => s.id === 'center')}
+						<button
+							class="skill-node"
+							class:learnt={centerSkill.state === 'LEARNT'}
+							class:selected={selectedSkill?.id === centerSkill.id}
+							style="left: {centerSkill.position.x}%; top: {centerSkill.position.y}%; --node-color: {realmColors[centerSkill.realm]}"
+							onclick={() => selectSkill(centerSkill)}
+						>
+							<div class="node-circle">
 								<HarvestRune />
-							{:else if skill.realm === 'HASHING'}
-								<EarthRune />
-							{:else if skill.realm === 'SYMMETRIC'}
-								<DayRune />
-							{:else if skill.realm === 'ASYMMETRIC'}
-								<FireRune />
-							{:else}
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-									<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
-								</svg>
-							{/if}
-						</div>
-						<div class="node-label">{skill.title}</div>
-					</button>
-				{/if}
-			{/each}
+							</div>
+							<div class="node-label">{centerSkill.title}</div>
+						</button>
+					{/if}
+
+					<!-- Main tree nodes -->
+					{#each mainSkills as skill}
+						{#if skill.state !== 'INVISIBLE'}
+							<button
+								class="skill-node"
+								class:learnt={skill.state === 'LEARNT'}
+								class:can-learn={skill.state === 'CAN_LEARN'}
+								class:cannot-learn={skill.state === 'CANNOT_LEARN'}
+								class:selected={selectedSkill?.id === skill.id}
+								style="left: {skill.position.x}%; top: {skill.position.y}%; --node-color: {realmColors[skill.realm]}"
+								onclick={() => selectSkill(skill)}
+							>
+								<div class="node-circle">
+									{#if skill.state === 'CANNOT_LEARN'}
+										<CannotLearnIcon />
+									{:else if skill.state === 'LEARNT'}
+										<HarvestRune />
+									{:else if skill.realm === 'HASHING'}
+										<EarthRune />
+									{:else if skill.realm === 'SYMMETRIC'}
+										<DayRune />
+									{:else if skill.realm === 'ASYMMETRIC'}
+										<FireRune />
+									{:else}
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+											<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
+										</svg>
+									{/if}
+								</div>
+								<div class="node-label">{skill.title}</div>
+							</button>
+						{/if}
+					{/each}
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -195,6 +301,34 @@
 		-webkit-text-fill-color: transparent;
 	}
 
+	.skill-tree-wrapper {
+		display: flex;
+		gap: 2rem;
+		flex: 1;
+		max-height: calc(100vh - 260px);
+		min-height: 520px;
+		max-width: 1200px;
+		width: 100%;
+		margin: 0 auto;
+	}
+
+	.encoding-tree-container {
+		flex: 0 0 20%;
+		min-width: 150px;
+		max-width: 250px;
+	}
+
+	.main-tree-container {
+		flex: 1;
+		min-width: 250px;
+	}
+
+	.skill-tree-inner {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
 	.skill-tree-container {
 		flex: 1;
 		position: relative;
@@ -230,7 +364,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 0.5rem;
+		/* gap: 0.5rem; */
 		transition: all 0.3s ease;
 		cursor: pointer;
 		pointer-events: auto;
@@ -246,8 +380,8 @@
 	}
 
 	.node-circle {
-		width: 80px;
-		height: 80px;
+		width: 55px;
+		height: 55px;
 		border-radius: 50%;
 		background: var(--bg-secondary);
 		border: 3px solid var(--node-color);
@@ -301,6 +435,7 @@
 
 	.skill-node.cannot-learn .node-label {
 		color: var(--text-secondary);
+		opacity: 0.3;
 	}
 
 	.panel-backdrop {
@@ -391,6 +526,28 @@
 
 	/* Mobile optimizations */
 	@media (max-width: 768px) {
+		.skill-tree-wrapper {
+			flex-direction: column;
+			gap: 1rem;
+			max-height: none;
+			min-height: auto;
+		}
+
+		.encoding-tree-container {
+			flex: 0 0 auto;
+			max-width: none;
+			height: 200px;
+		}
+
+		.main-tree-container {
+			flex: 1;
+			min-height: 400px;
+		}
+
+		.skill-tree-inner {
+			height: 100%;
+		}
+
 		.node-circle {
 			width: 60px;
 			height: 60px;
