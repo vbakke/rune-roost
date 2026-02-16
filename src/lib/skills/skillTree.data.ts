@@ -6,6 +6,10 @@ export const skillTree = {
             label: 'Roman alphabet',
             description: 'Our journey starts with the 23 letters of the Roman alphabet'
         },
+        'encoding.decimal': {
+            label: 'Decimal numbers',
+            dependsOn: ['encoding.roman']
+        },
         'encoding.ascii': {
             label: 'ASCII',
             dependsOn: ['encoding.roman']
@@ -32,14 +36,14 @@ export const skillTree = {
             label: 'Encrypt text'
         },
         'sym.decrypt': {
-            label: 'Decrypt',
+            label: 'Decrypt S',
             dependsOn: ['sym.encrypt'],
         },
         'sym.block_size': {
             label: 'Encrypt with AES',
             dependsOn: ['sym.decrypt']
         },
-        'sym.aes': {
+        'sym.aes.encrypt': {
             label: 'Encrypt with AES',
             dependsOn: ['sym.decrypt', 'encoding.bytes']
         },
@@ -58,12 +62,12 @@ export const skillTree = {
         },
         'asym.encrypt.num': {
             label: 'Encrypt numbers using RSA',
-            dependsOn: ['asym.decrypt'],
+            dependsOn: ['asym.decrypt.simple'],
         },
         'asym.quantum': {
             label: 'Quantum attacks',
             description: 'Learn about how quantum computers can break RSA and other asymmetric encryption schemes.',
-            dependsOn: ['asym.decrypt'],
+            dependsOn: ['asym.decrypt.simple'],
         },
     },
     hashing: {

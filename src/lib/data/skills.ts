@@ -152,7 +152,7 @@ const buildSkillNodes = (tree: SkillTree): SkillNode[] => {
 	});
 
 	const rowSpacing = 16;
-	const columnSpacing = 30;
+	const columnSpacing = 10;
 	const nodes: SkillNode[] = [];
 
 	grouped.forEach((entries, category) => {
@@ -192,10 +192,10 @@ const buildSkillNodes = (tree: SkillTree): SkillNode[] => {
 				depthNodes.forEach((node, indexInDepth) => {
 					const depth = depthById.get(node.id) ?? 0;
 					const positionY = config.position.y + direction * rowSpacing * (depth + 1);
-					
-					// Spread nodes horizontally based on their index within the depth
-					const horizontalSpacing = 50;
-					const positionX = config.position.x + (indexInDepth - (depthNodes.length - 1) / 2) * horizontalSpacing;
+					const horizontalSpacing = node.category === 'encoding' ? 50 : 20;
+					const positionX =
+						config.position.x +
+						(indexInDepth - (depthNodes.length - 1) / 2) * horizontalSpacing;
 
 					nodes.push({
 						id: node.id,
@@ -223,7 +223,7 @@ const buildSkillNodes = (tree: SkillTree): SkillNode[] => {
 		// 			id: node.id,
 		// 			title: node.label,
 		// 			description: `Lesson: ${node.label}`,
-		// 			hint: hintFor(node, nodesById),
+		// 			hint: hintFor(node, nodesById),		
 		// 			realm: config.realm,
 		// 			state: stateFor(node),
 		// 			position: {
@@ -256,11 +256,17 @@ const buildSkillLinks = (tree: SkillTree, nodes: SkillNode[]): SkillLink[] => {
 	const realmById = new Map(nodes.map((node) => [node.id, node.realm]));
 	const flatSkills = flattenSkillTree(tree);
 
+	// Loop over all skills and their dependencies
 	return flatSkills.flatMap((node) =>
 		(node.dependsOn ?? []).map((dependency) => {
 			const depRealm = realmById.get(dependency);
 			const nodeRealm = realmById.get(node.id);
 			
+			if (!depRealm) {
+				console.warn(`Node ${node.id} has unknown dependency ${dependency}`);
+				return null;
+			}
+
 			// Skip cross-realm links from encoding to other categories
 			if (depRealm === 'ENCODING' || nodeRealm === 'ENCODING') {
 				if (depRealm !== nodeRealm) {

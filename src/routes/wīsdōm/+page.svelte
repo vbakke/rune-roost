@@ -41,6 +41,9 @@
 			}
 
 			return {
+				fromId: link.fromId,
+				toId: link.toId,
+				realm: link.realm,
 				x1: from.x,
 				y1: from.y,
 				x2: to.x,
@@ -48,10 +51,23 @@
 				color: realmColors[link.realm]
 			};
 		})
-		.filter((line): line is { x1: number; y1: number; x2: number; y2: number; color: string } =>
-			line !== null
+		.filter(
+			(
+				line
+			): line is {
+				fromId: string;
+				toId: string;
+				realm: string;
+				x1: number;
+				y1: number;
+				x2: number;
+				y2: number;
+				color: string;
+			} => line !== null
 		);
 
+	const encodingLines = dependencyLines.filter((line) => line.realm === 'ENCODING');
+	const mainLines = dependencyLines.filter((line) => line.realm !== 'ENCODING');
 	const encodingSkills = skills.filter((s) => s.realm === 'ENCODING');
 	const mainSkills = skills.filter((s) => s.realm !== 'ENCODING' && s.id !== 'center');
 
@@ -110,16 +126,16 @@
 			<div class="skill-tree-inner">
 				<svg class="connection-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
 					<!-- Encoding internal dependency lines -->
-					{#each dependencyLines as line}
-					{@const fromSkill = skills.find((s) => s.position.x === line.x1 && s.position.y === line.y1)}
-					{@const toSkill = skills.find((s) => s.position.x === line.x2 && s.position.y === line.y2)}
-					{#if fromSkill?.realm === 'ENCODING' && toSkill?.realm === 'ENCODING'}
-								y2={line.y2}
-								stroke={line.color}
-								stroke-width="1.25"
-								opacity="0.9"
-							/>
-						{/if}
+					{#each encodingLines as line}
+						<line
+							x1={line.x1}
+							y1={line.y1}
+							x2={line.x2}
+							y2={line.y2}
+							stroke={line.color}
+							stroke-width="1.25"
+							opacity="0.9"
+						/>
 					{/each}
 				</svg>
 
@@ -161,17 +177,21 @@
 			<div class="skill-tree-inner">
 				<svg class="connection-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
 					<!-- Lines connecting center to category nodes -->
-					<line x1="50" y1="50" x2="50" y2="35" stroke={realmColors.SYMMETRIC} stroke-width="0.3" opacity="0.5" />
-					<line x1="50" y1="50" x2="80" y2="35" stroke={realmColors.ASYMMETRIC} stroke-width="0.3" opacity="0.5" />
-					<line x1="50" y1="50" x2="50" y2="85" stroke={realmColors.HASHING} stroke-width="0.3" opacity="0.5" />
+					<line x1="50" y1="130" x2="50" y2="135" stroke={realmColors.SYMMETRIC} stroke-width="0.3" opacity="0.5" />
+					<line x1="50" y1="130" x2="80" y2="135" stroke={realmColors.ASYMMETRIC} stroke-width="0.3" opacity="0.5" />
+					<line x1="50" y1="130" x2="20" y2="135" stroke={realmColors.HASHING} stroke-width="0.3" opacity="0.5" />
 
-					<!-- Lines showing dependency paths (excluding encoding cross-links) -->
-					{#each dependencyLines as line}
-					{@const fromSkill = skills.find((s) => s.position.x === line.x1 && s.position.y === line.y1)}
-					{@const toSkill = skills.find((s) => s.position.x === line.x2 && s.position.y === line.y2)}
-					{#if fromSkill?.realm !== 'ENCODING' && toSkill?.realm !== 'ENCODING'}
-							/>
-						{/if}
+					<!-- Lines showing dependency paths -->
+					{#each mainLines as line}
+						<line
+							x1={line.x1}
+							y1={line.y1}
+							x2={line.x2}
+							y2={line.y2}
+							stroke={line.color}
+							stroke-width="0.25"
+							opacity="0.6"
+						/>
 					{/each}
 				</svg>
 
@@ -434,8 +454,8 @@
 	}
 
 	.skill-node.cannot-learn .node-label {
-		color: var(--text-secondary);
-		opacity: 0.3;
+		color: color-mix(in srgb, var(--text-secondary), 60% black);
+		text-shadow: 0px 0px 2px rgb(00,00,00);
 	}
 
 	.panel-backdrop {
