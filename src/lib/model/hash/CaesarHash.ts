@@ -1,5 +1,5 @@
 import { CaesarRot } from "../../methods/CaesarRot.ts";
-import { Message } from "../Message.ts";
+import { Message } from "../Message.svelte.ts";
 
 export class CaesarHash
 {

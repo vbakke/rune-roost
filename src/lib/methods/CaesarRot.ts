@@ -1,4 +1,4 @@
-import { Message } from "../model/Message.ts";
+import { Message } from "../model/Message.svelte.ts";
 
 export class CaesarRot
 {

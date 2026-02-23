@@ -2,7 +2,7 @@
 	interface Props {
 		value: string;
 		type?: 'gold' | 'silver';
-		reverse: boolean;
+		reverse?: boolean;
 		onclick?: () => void;
 	}
 	
@@ -10,7 +10,7 @@
 </script>
 
 <div class="key">
-	<div class="key-icon {type}">
+	<div class="key-icon {type} {onclick ? 'clickable' : ''}">
 		{#if onclick}
 			<button onclick={onclick}>🔑</button>
 		{:else}
@@ -34,6 +34,15 @@
 		text-shadow: 
 			1px 1px 3px rgba(0, 0, 0, 0.6),
 			0 0 8px rgba(192, 192, 192, 0.5);
+		user-select: none;
+	}
+
+	.key-icon.clickable {
+		cursor: pointer;
+	}
+	.key-icon.clickable:hover {
+		transform: scale(1.15);
+		transition: transform 0.1s ease-in-out;
 	}
 	
 	.key-icon.gold {

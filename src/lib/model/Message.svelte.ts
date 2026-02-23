@@ -3,7 +3,7 @@ export enum PlainType { AUTO, DECIMAL, HEX, ROMAN, ASCII, UNICODE, BASE64}
 
 export class Message {
     static ROMAN_ALPHABET: string = 'ABCDEFGHIKLMNOPQRSTVXYZ';
-    // static ROMAN_ALPHABET: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    static LATIN_ALPHABET: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     plain: string;
     type: PlainType;

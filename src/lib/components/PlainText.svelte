@@ -12,7 +12,7 @@
 	let { value = $bindable(), onchange, icon = 'quill', readonly = false }: Props = $props();
 </script>
 
-<div class="desk scribe">
+<div class="desk scribe {readonly ? '' : 'clickable'}">
 	<input
 		class="desk-input"
 		bind:value={value}
@@ -68,7 +68,7 @@
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 	}
 
-	.desk.scribe:hover {
+	.desk.scribe.clickable:hover {
 		background: rgba(255, 255, 255, 0.9);
 		transform: translateY(-2px);
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

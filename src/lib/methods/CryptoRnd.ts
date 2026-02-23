@@ -1,7 +1,12 @@
-import { Message } from "../model/Message.ts";
+import { Message } from "../model/Message.svelte.ts";
 
 export class CryptoRandom
 {
+    public static randomChar(str: string): string {
+        const index = this.random(str.length);
+        return str[index];
+    }
+
     public static random(max: number): number {
         if (max <= 256) {
             return this.randomUint8(max);

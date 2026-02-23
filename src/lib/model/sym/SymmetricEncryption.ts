@@ -1,8 +1,8 @@
-import type { Message } from "../Message.ts";
+import type { Message } from "../Message.svelte.ts";
+import type { SecretKey } from "./SecretKey.svelte.ts";
 
 export interface SymmetricEncryption
 {
-    generateKey(): Message;
-    encrypt(plaintext: Message, key: Message): Message;
-    decrypt(ciphertext: Message, key: Message): Message;
+    encrypt(plaintext: Message, secret: SecretKey): Message;
+    decrypt(ciphertext: Message, secret: SecretKey): Message;
 }
