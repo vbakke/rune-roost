@@ -93,7 +93,7 @@
 			<p>
 				We cover symmetric encryption, asymmetric encryption, hashing algorithms,
 				 both fast hashing and password hashing. See what encoding really is. 
-				 And learn the pitfalls of AES encyrption modes when using AES GCM, and which 
+				 And learn the pitfalls of AES encryption modes when using AES GCM, and which 
 				 AES mode is good for what. 
 			</p>
 			<p>
