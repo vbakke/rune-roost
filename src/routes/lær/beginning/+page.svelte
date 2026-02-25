@@ -30,7 +30,7 @@
 			if (index !== -1) {
 				encoded.push(index);
 			} else {
-				encoded.push('?'); z
+				encoded.push('?');
 			}
 		}
 		return encoded;
