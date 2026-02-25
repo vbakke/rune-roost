@@ -2,7 +2,7 @@
 	import BookComponent from '$lib/components/BookComponent.svelte';
 	import Page from '$lib/components/Page.svelte';
 	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
-    import { Message } from '$lib/model/Message.ts';
+    import { Message } from '$lib/model/Message.svelte';
 
 	const ABBA: string = 'ABBA';
 	const BOY: string = 'BOY';
