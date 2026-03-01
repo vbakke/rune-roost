@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import BookComponent from '$lib/components/BookComponent.svelte';
 	import Page from '$lib/components/Page.svelte';
-    import Raven2a from '$lib/components/icons/RavenHead.svelte';
+	import LearnCoin from '$lib/components/LearnCoin.svelte';
 	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
+	import { learnedSkills } from '$lib/skills/learnedSkills';
     import { Message } from '$lib/model/Message.svelte';
 
 	const ABBA: string = 'ABBA';
@@ -11,7 +13,7 @@
 	let currentPage = $state(0);
 	let secretKey: number = $state(2);
 	let alphabet: string = $state(Message.ROMAN_ALPHABET);
-	let shiftedAlphabet: string = @$derived(shifted(alphabet));
+	let shiftedAlphabet: string = $derived(shifted(alphabet));
 
 	function onShiftAlphabet(e: Event, direction: number) {
 		e.preventDefault();
@@ -24,8 +26,8 @@
 		shiftedAlphabet = shifted(alphabet);
 	}
 
-	function encode(message: string): Number[] {
-		let encoded: Number[] = [];
+	function encode(message: string): number[] {
+		let encoded: number[] = [];
 		for (let char of message.toUpperCase()) {
 			let index = alphabet.indexOf(char) + 1;
 			if (index !== -1) {
@@ -37,12 +39,12 @@
 		return encoded;
 	}
 
-	function decode(encoded: Number[]): string {
+	function decode(encoded: number[]): string {
 		let decoded = '';
-		for (let num: number of encoded) {
-			num--;
-			if (num >= 0 && num < alphabet.length) {
-				decoded += alphabet[num];
+		for (let num of encoded) {
+			let index = num - 1;
+			if (index >= 0 && index < alphabet.length) {
+				decoded += alphabet[index];
 			} else {
 				decoded += 'x';
 			}
@@ -50,8 +52,8 @@
 		return decoded;
 	}
 
-	function encrypt(message: Number[], secretKey: number): Number[] {
-		let encrypted: Number[] = [];
+	function encrypt(message: number[], secretKey: number): number[] {
+		let encrypted: number[] = [];
 		for (let num of message) {
 			let index = (num - 1 + secretKey) % alphabet.length;
 			encrypted.push(index + 1);
@@ -63,9 +65,30 @@
 		return (alphabet + alphabet).substr(secretKey, alphabet.length);
 	}
 
-	function secretKeyIdentifier(secretKey: string) {
+	function secretKeyIdentifier(secretKey: number) {
 		return alphabet.substr(secretKey, 1);
 	}
+
+	function handleLearnEvent(event: CustomEvent) {
+		const topic = event.detail.topic;
+		console.log('Learning topic:', topic);
+		
+		// Mark the skill as learned
+		learnedSkills.add(topic);
+		
+		// TODO: Optionally show a dialog or animation to explain the concept
+	}
+
+	onMount(() => {
+		// Mark encoding.roman as learned since this page teaches it
+		learnedSkills.add('encoding.roman');
+		
+		document.addEventListener('learn', handleLearnEvent as EventListener);
+		
+		return () => {
+			document.removeEventListener('learn', handleLearnEvent as EventListener);
+		};
+	});
 </script>
 
 <svelte:head>
@@ -111,7 +134,7 @@
 				</p>
 				
 				{#if alphabet.length == 23}
-				<p><i>(Note. Julius had only 23 letters in his alphabet)</i></p><Raven2a />
+				<p><i>(Note. Julius had only 23 letters in his alphabet)</i><LearnCoin topic="encoding.latin" /></p>
 				{/if}
 
 			</Page>
@@ -126,6 +149,7 @@
 				<p>Encrypting<br/>{ABBA}: <code>{ABBA} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(ABBA), secretKey))}</code> <br/>
 				    And {BOY}: <code>{BOY} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(BOY), secretKey))}</code> <br/>
 				</p>
+				<LearnCoin topic="sym.decrypt" />
 				<div class="blur">
 					<h3>Decrypt</h3>
 					<p>To decrypt, we just reverse the operation:<br/>
@@ -269,7 +293,7 @@
 		margin-bottom: 1rem;
 	}
 
-	.alaphabet-rot code {
+	code {
 		font-size: 1.4em;
 	}
 	.alaphabet-rot .book-button svg {
