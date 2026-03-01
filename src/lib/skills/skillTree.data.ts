@@ -38,10 +38,10 @@ export const skillTree = {
     },
     symmetric: {
         'sym.encrypt': {
-            label: 'Encrypt text'
+            label: 'Encrypt'
         },
         'sym.decrypt': {
-            label: 'Decrypt S',
+            label: 'Decrypt',
             dependsOn: ['sym.encrypt'],
         },
         'sym.block_size': {

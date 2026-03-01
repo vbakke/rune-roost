@@ -32,6 +32,8 @@
 	}
 
 	const positionById = new Map(skills.map((skill) => [skill.id, skill.position]));
+	const realmById = new Map(skills.map((skill) => [skill.id, skill.realm]));
+	
 	const dependencyLines = skillLinks
 		.map((link) => {
 			const from = positionById.get(link.fromId);
@@ -45,10 +47,12 @@
 				y1: from.y,
 				x2: to.x,
 				y2: to.y,
-				color: realmColors[link.realm]
+				color: realmColors[link.realm],
+				fromRealm: realmById.get(link.fromId),
+				toRealm: realmById.get(link.toId)
 			};
 		})
-		.filter((line): line is { x1: number; y1: number; x2: number; y2: number; color: string } =>
+		.filter((line): line is { x1: number; y1: number; x2: number; y2: number; color: string; fromRealm: string | undefined; toRealm: string | undefined } =>
 			line !== null
 		);
 
@@ -111,19 +115,17 @@
 				<svg class="connection-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
 					<!-- Encoding internal dependency lines -->
 					{#each dependencyLines as line}
-					{@const fromSkill = skills.find((s) => s.position.x === line.x1 && s.position.y === line.y1)}
-					{@const toSkill = skills.find((s) => s.position.x === line.x2 && s.position.y === line.y2)}
-					{#if fromSkill?.realm === 'ENCODING' && toSkill?.realm === 'ENCODING'}
-							<line
-								x1={line.x1}
-								y1={line.y1}
-								x2={line.x2}
-								y2={line.y2}
-								stroke={line.color}
-								stroke-width="1.25"
-								opacity="0.9"
-							/>
-						{/if}
+					{#if line.fromRealm === 'ENCODING' && line.toRealm === 'ENCODING'}
+						<line
+							x1={line.x1}
+							y1={line.y1}
+							x2={line.x2}
+							y2={line.y2}
+							stroke={line.color}
+							stroke-width="1.25"
+							opacity="0.9"
+						/>
+					{/if}
 					{/each}
 				</svg>
 
@@ -171,19 +173,17 @@
 
 					<!-- Lines showing dependency paths (excluding encoding cross-links) -->
 					{#each dependencyLines as line}
-					{@const fromSkill = skills.find((s) => s.position.x === line.x1 && s.position.y === line.y1)}
-					{@const toSkill = skills.find((s) => s.position.x === line.x2 && s.position.y === line.y2)}
-					{#if fromSkill?.realm !== 'ENCODING' && toSkill?.realm !== 'ENCODING'}
-							<line
-								x1={line.x1}
-								y1={line.y1}
-								x2={line.x2}
-								y2={line.y2}
-								stroke={line.color}
-								stroke-width="1.25"
-								opacity="0.9"
-							/>
-						{/if}
+					{#if line.fromRealm !== 'ENCODING' && line.toRealm !== 'ENCODING'}
+						<line
+							x1={line.x1}
+							y1={line.y1}
+							x2={line.x2}
+							y2={line.y2}
+							stroke={line.color}
+							stroke-width="1.25"
+							opacity="0.9"
+						/>
+					{/if}
 					{/each}
 				</svg>
 

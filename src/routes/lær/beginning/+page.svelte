@@ -12,7 +12,14 @@
 
 	let currentPage = $state(0);
 	let secretKey: number = $state(2);
-	let alphabet: string = $state(Message.ROMAN_ALPHABET);
+	
+	// Use Latin alphabet if learned, otherwise Roman
+	let alphabet: string = $derived(
+		$learnedSkills.has('encoding.latin') 
+			? Message.LATIN_ALPHABET 
+			: Message.ROMAN_ALPHABET
+	);
+	
 	let shiftedAlphabet: string = $derived(shifted(alphabet));
 
 	function onShiftAlphabet(e: Event, direction: number) {

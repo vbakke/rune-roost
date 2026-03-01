@@ -3,6 +3,7 @@
 	import { learnedSkills } from '$lib/skills/learnedSkills';
 	import { calculateSkillStats, getCategoryIcon, getCategoryColor, getCategoryLabel } from '$lib/skills/skillStats';
 	import { appState, type AlphabetType, type EncodingType } from '$lib/stores/appState';
+	import type { SkillId } from '$lib/skills/skillTree.data';
 	import SkillTreeIcon from './icons/SkillTreeIcon.svelte';
 	import BookIcon from './icons/BookIcon.svelte';
 	import RavenIcon from './icons/RavenIcon.svelte';
@@ -11,20 +12,30 @@
 	let stats = $derived(calculateSkillStats($learnedSkills));
 	let isLearningPage = $derived($page.url.pathname.startsWith('/lær'));
 	
-	const alphabets: { value: AlphabetType; label: string }[] = [
-		{ value: 'ROMAN', label: 'Roman' },
-		{ value: 'LATIN', label: 'Latin' },
-		{ value: 'ASCII', label: 'ASCII' },
-		{ value: 'UNICODE', label: 'Unicode' },
-		{ value: 'NUMBERS', label: 'Numbers' }
+	const allAlphabets: { value: AlphabetType; label: string; skillId: SkillId }[] = [
+		{ value: 'ROMAN', label: 'Roman', skillId: 'encoding.roman' },
+		{ value: 'LATIN', label: 'Latin', skillId: 'encoding.latin' },
+		{ value: 'ASCII', label: 'ASCII', skillId: 'encoding.ascii' },
+		{ value: 'UNICODE', label: 'Unicode', skillId: 'encoding.unicode' },
+		{ value: 'NUMBERS', label: 'Numbers', skillId: 'encoding.decimal' }
 	];
 	
-	const encodings: { value: EncodingType; label: string }[] = [
-		{ value: 'PLAIN', label: 'Plain' },
-		{ value: 'BASE64', label: 'Base64' },
-		{ value: 'HEX', label: 'Hex' },
-		{ value: 'BINARY', label: 'Binary' }
+	// Filter alphabets to only show learned ones
+	const alphabets = $derived(
+		allAlphabets.filter(alphabet => $learnedSkills.has(alphabet.skillId))
+	);
+	
+	const allEncodings: { value: EncodingType; label: string; skillId?: SkillId }[] = [
+		{ value: 'PLAIN', label: 'Plain' }, // Always available
+		{ value: 'BASE64', label: 'Base64', skillId: 'encoding.base64' },
+		{ value: 'HEX', label: 'Hex', skillId: 'encoding.hex' },
+		{ value: 'BINARY', label: 'Binary', skillId: 'encoding.bytes' }
 	];
+	
+	// Filter encodings to only show learned ones (PLAIN is always available)
+	const encodings = $derived(
+		allEncodings.filter(encoding => !encoding.skillId || $learnedSkills.has(encoding.skillId))
+	);
 </script>
 
 <div class="status-bar">
@@ -74,6 +85,7 @@
 		</div>
 
 		<!-- Right section: Alphabet and Encoding selectors -->
+		{#if alphabets.length > 0}
 		<div class="controls">
 			<div class="control-group">
 				<label for="alphabet-select">Alphabet:</label>
@@ -101,6 +113,7 @@
 				</select>
 			</div>
 		</div>
+		{/if}
 	</div>
 </div>
 

@@ -267,6 +267,11 @@ const buildSkillLinks = (tree: SkillTree, nodes: SkillNode[]): SkillLink[] => {
 				return null;
 			}
 
+			if (!nodeRealm) {
+				console.warn(`Node ${node.id} not found in realm map`);
+				return null;
+			}
+
 			// Skip cross-realm links from encoding to other categories
 			if (depRealm === 'ENCODING' || nodeRealm === 'ENCODING') {
 				if (depRealm !== nodeRealm) {
@@ -277,7 +282,7 @@ const buildSkillLinks = (tree: SkillTree, nodes: SkillNode[]): SkillLink[] => {
 			return {
 				fromId: dependency,
 				toId: node.id,
-				realm: realmById.get(node.id) ?? 'GENERAL'
+				realm: nodeRealm
 			};
 		})
 		.filter((link): link is SkillLink => link !== null)

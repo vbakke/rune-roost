@@ -7,7 +7,7 @@
 	let { children } = $props();
 	
 	// Show status bar only when user has learned something and not on welcome page
-	let showStatusBar = $derived($learnedSkills.size > 0 && $page.url.pathname !== '/');
+	let showStatusBar = $derived($learnedSkills.size > 1 && $page.url.pathname !== '/');
 </script>
 
 <svelte:head>
