@@ -1,8 +1,13 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/stores';
+	import { learnedSkills } from '$lib/skills/learnedSkills';
+	import StatusBar from '$lib/components/StatusBar.svelte';
 
 	let { children } = $props();
+	
+	// Show status bar only when user has learned something and not on welcome page
+	let showStatusBar = $derived($learnedSkills.size > 0 && $page.url.pathname !== '/');
 </script>
 
 <svelte:head>
@@ -25,4 +30,9 @@
 		transition: filter 0.6s ease-in-out;
 	}
 </style>
+
+{#if showStatusBar}
+	<StatusBar />
+{/if}
+
 {@render children()}

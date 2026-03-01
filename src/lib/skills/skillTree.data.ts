@@ -6,13 +6,18 @@ export const skillTree = {
             label: 'Roman alphabet',
             description: 'Our journey starts with the 23 letters of the Roman alphabet'
         },
+        'encoding.latin': {
+            label: 'Latin alphabet',
+            description: 'Let\'s continue with the 26 letters of the Latin alphabet in Engleish',
+            dependsOn: ['encoding.roman']
+        },
         'encoding.decimal': {
             label: 'Decimal numbers',
-            dependsOn: ['encoding.roman']
+            dependsOn: ['encoding.latin']
         },
         'encoding.ascii': {
             label: 'ASCII',
-            dependsOn: ['encoding.roman']
+            dependsOn: ['encoding.latin']
         },
         'encoding.bytes': {
             label: 'Bytes',

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import BookComponent from '$lib/components/BookComponent.svelte';
 	import Page from '$lib/components/Page.svelte';
+    import Raven2a from '$lib/components/icons/RavenHead.svelte';
 	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
     import { Message } from '$lib/model/Message.svelte';
 
@@ -9,8 +10,8 @@
 
 	let currentPage = $state(0);
 	let secretKey: number = $state(2);
-	let alphabet: string = Message.ROMAN_ALPHABET;
-	let shiftedAlphabet: string = shifted();
+	let alphabet: string = $state(Message.ROMAN_ALPHABET);
+	let shiftedAlphabet: string = @$derived(shifted(alphabet));
 
 	function onShiftAlphabet(e: Event, direction: number) {
 		e.preventDefault();
@@ -20,7 +21,7 @@
 
 	function shift(direction: number) {
 		secretKey = (secretKey + direction + alphabet.length) % alphabet.length;
-		shiftedAlphabet = shifted();
+		shiftedAlphabet = shifted(alphabet);
 	}
 
 	function encode(message: string): Number[] {
@@ -30,7 +31,7 @@
 			if (index !== -1) {
 				encoded.push(index);
 			} else {
-				encoded.push('?');
+				encoded.push(-1);
 			}
 		}
 		return encoded;
@@ -38,7 +39,7 @@
 
 	function decode(encoded: Number[]): string {
 		let decoded = '';
-		for (let num of encoded) {
+		for (let num: number of encoded) {
 			num--;
 			if (num >= 0 && num < alphabet.length) {
 				decoded += alphabet[num];
@@ -58,7 +59,7 @@
 		return encrypted;
 	}
 
-	function shifted() {
+	function shifted(alphabet: string): string {
 		return (alphabet + alphabet).substr(secretKey, alphabet.length);
 	}
 
@@ -88,7 +89,7 @@
 				<div class="alaphabet-rot">
 					<code>{ alphabet }</code>
 					<code>{ shiftedAlphabet }</code>
-					<span class="secret-key">secret key: <code>{ secretKeyIdentifier(secretKey) }</code></span>
+					<span class="secret-key">secret key:<br/><code>{ secretKeyIdentifier(secretKey) }</code></span>
 					<div class="buttons">
 						<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
 							<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
@@ -110,7 +111,7 @@
 				</p>
 				
 				{#if alphabet.length == 23}
-				<p><i>(Note. Julius had only 23 letters in his alphabet)</i></p>
+				<p><i>(Note. Julius had only 23 letters in his alphabet)</i></p><Raven2a />
 				{/if}
 
 			</Page>
@@ -268,6 +269,13 @@
 		margin-bottom: 1rem;
 	}
 
+	.alaphabet-rot code {
+		font-size: 1.4em;
+	}
+	.alaphabet-rot .book-button svg {
+		width: 22px;
+		height: 26px;
+	}
 	.alaphabet-rot .buttons {
 		margin-top: 0.3rem;
 	}
@@ -280,6 +288,11 @@
 		grid-column: 2;
 		grid-row: 1 / 3;
 		align-self: end;
+		text-align: center;
+		border: #c08132 2px solid;
+		border-radius: 17px;
+		padding: 4px;
+		background-color: #efe6ce;
 	}
 
 	.lesson-button {
@@ -304,6 +317,11 @@
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 	}
 
+	.raven-icon {
+		width: 24px;
+		height: 24px;
+		fill: #bea13b;
+	}
 	svg {
 		display: block;
 		width: 12px;

@@ -114,6 +114,10 @@
 					{@const fromSkill = skills.find((s) => s.position.x === line.x1 && s.position.y === line.y1)}
 					{@const toSkill = skills.find((s) => s.position.x === line.x2 && s.position.y === line.y2)}
 					{#if fromSkill?.realm === 'ENCODING' && toSkill?.realm === 'ENCODING'}
+							<line
+								x1={line.x1}
+								y1={line.y1}
+								x2={line.x2}
 								y2={line.y2}
 								stroke={line.color}
 								stroke-width="1.25"
@@ -170,6 +174,14 @@
 					{@const fromSkill = skills.find((s) => s.position.x === line.x1 && s.position.y === line.y1)}
 					{@const toSkill = skills.find((s) => s.position.x === line.x2 && s.position.y === line.y2)}
 					{#if fromSkill?.realm !== 'ENCODING' && toSkill?.realm !== 'ENCODING'}
+							<line
+								x1={line.x1}
+								y1={line.y1}
+								x2={line.x2}
+								y2={line.y2}
+								stroke={line.color}
+								stroke-width="1.25"
+								opacity="0.9"
 							/>
 						{/if}
 					{/each}

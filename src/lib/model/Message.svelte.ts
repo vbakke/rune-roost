@@ -1,4 +1,4 @@
-export enum PlainType { AUTO, DECIMAL, HEX, ROMAN, ASCII, UNICODE, BASE64}
+export enum PlainType { AUTO, ROMAN, LATIN, ASCII, UNICODE, DECIMAL, HEX, BASE64}
 
 
 export class Message {
