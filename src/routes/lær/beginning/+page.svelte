@@ -5,6 +5,8 @@
 	import LearnCoin from '$lib/components/LearnCoin.svelte';
 	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
 	import { learnedSkills } from '$lib/skills/learnedSkills';
+	import { alphabetLearning } from '$lib/stores/alphabetLearning';
+	import { appState } from '$lib/stores/appState';
     import { Message } from '$lib/model/Message.svelte';
 
 	const ABBA: string = 'ABBA';
@@ -12,6 +14,9 @@
 
 	let currentPage = $state(0);
 	let secretKey: number = $state(2);
+	let alphabetFlash = $state(false);
+	let previousAlphabet = $state('');
+	let previousSelectedAlphabet = $state($appState.selectedAlphabet);
 	
 	// Use Latin alphabet if learned, otherwise Roman
 	let alphabet: string = $derived(
@@ -21,6 +26,33 @@
 	);
 	
 	let shiftedAlphabet: string = $derived(shifted(alphabet));
+
+	// Watch for alphabet changes (from learning or manual selection) and trigger flash
+	$effect(() => {
+		if (previousAlphabet && previousAlphabet !== alphabet) {
+			// Delay flash to start after StatusBar flash completes
+			setTimeout(() => {
+				alphabetFlash = true;
+				setTimeout(() => {
+					alphabetFlash = false;
+				}, 1500);
+			}, 1200);
+		}
+		previousAlphabet = alphabet;
+	});
+
+	// Watch for manual alphabet changes in StatusBar
+	$effect(() => {
+		if (previousSelectedAlphabet !== $appState.selectedAlphabet) {
+			if (previousSelectedAlphabet) {
+				alphabetFlash = true;
+				setTimeout(() => {
+					alphabetFlash = false;
+				}, 1500);
+			}
+			previousSelectedAlphabet = $appState.selectedAlphabet;
+		}
+	});
 
 	function onShiftAlphabet(e: Event, direction: number) {
 		e.preventDefault();
@@ -83,7 +115,16 @@
 		// Mark the skill as learned
 		learnedSkills.add(topic);
 		
-		// TODO: Optionally show a dialog or animation to explain the concept
+		// If it's an alphabet skill, trigger the learning animation
+		if (topic === 'encoding.latin') {
+			alphabetLearning.learnAlphabet('LATIN');
+		} else if (topic === 'encoding.ascii') {
+			alphabetLearning.learnAlphabet('ASCII');
+		} else if (topic === 'encoding.unicode') {
+			alphabetLearning.learnAlphabet('UNICODE');
+		} else if (topic === 'encoding.decimal') {
+			alphabetLearning.learnAlphabet('NUMBERS');
+		}
 	}
 
 	onMount(() => {
@@ -117,8 +158,8 @@
 					<em>rotating</em> the alphabet.
 				</p>
 				<div class="alaphabet-rot">
-					<code>{ alphabet }</code>
-					<code>{ shiftedAlphabet }</code>
+					<code class:flash-alphabet={alphabetFlash}>{ alphabet }</code>
+					<code class:flash-alphabet={alphabetFlash}>{ shiftedAlphabet }</code>
 					<span class="secret-key">secret key:<br/><code>{ secretKeyIdentifier(secretKey) }</code></span>
 					<div class="buttons">
 						<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
@@ -303,6 +344,26 @@
 	code {
 		font-size: 1.4em;
 	}
+	
+	.flash-alphabet {
+		animation: flash-alphabet 1.5s ease-in-out;
+	}
+	
+	@keyframes flash-alphabet {
+		0%, 100% {
+			color: inherit;
+			text-shadow: none;
+		}
+		13.333%, 40%, 66.666%, 93.333% {
+			color: #ffd700;
+			text-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
+		}
+		26.666%, 53.333%, 80% {
+			color: inherit;
+			text-shadow: none;
+		}
+	}
+	
 	.alaphabet-rot .book-button svg {
 		width: 22px;
 		height: 26px;
@@ -361,6 +422,7 @@
 	}
 
 	@media (max-width: 768px) {
+
 		h1 {
 			font-size: 2rem;
 		}
@@ -368,5 +430,14 @@
 		.interactive-demo {
 			padding: 1rem;
 		}
+
+		.lesson-container {
+			padding: 0.2rem;
+		}
+		code {
+			font-size: 1.2rem;
+		}
+
 	}
 </style>
+	

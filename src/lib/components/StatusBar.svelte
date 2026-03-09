@@ -3,6 +3,7 @@
 	import { learnedSkills } from '$lib/skills/learnedSkills';
 	import { calculateSkillStats, getCategoryIcon, getCategoryColor, getCategoryLabel } from '$lib/skills/skillStats';
 	import { appState, type AlphabetType, type EncodingType } from '$lib/stores/appState';
+	import { alphabetLearning } from '$lib/stores/alphabetLearning';
 	import type { SkillId } from '$lib/skills/skillTree.data';
 	import SkillTreeIcon from './icons/SkillTreeIcon.svelte';
 	import BookIcon from './icons/BookIcon.svelte';
@@ -11,6 +12,7 @@
 
 	let stats = $derived(calculateSkillStats($learnedSkills));
 	let isLearningPage = $derived($page.url.pathname.startsWith('/lær'));
+	let flashAlphabet = $state(false);
 	
 	const allAlphabets: { value: AlphabetType; label: string; skillId: SkillId }[] = [
 		{ value: 'ROMAN', label: 'Roman', skillId: 'encoding.roman' },
@@ -36,6 +38,29 @@
 	const encodings = $derived(
 		allEncodings.filter(encoding => !encoding.skillId || $learnedSkills.has(encoding.skillId))
 	);
+
+	// Watch for newly learned alphabets
+	$effect(() => {
+		if ($alphabetLearning.newlyLearnedAlphabet && $alphabetLearning.flashAlphabet) {
+			// Flash the dropdown for 1 second (3 flashes)
+			flashAlphabet = true;
+			
+			setTimeout(() => {
+				// Stop flashing and switch to the newly learned alphabet
+				flashAlphabet = false;
+				alphabetLearning.clearFlash();
+				
+				if ($alphabetLearning.newlyLearnedAlphabet) {
+					appState.setAlphabet($alphabetLearning.newlyLearnedAlphabet);
+					
+					// Clear the learning state after switching
+					setTimeout(() => {
+						alphabetLearning.clear();
+					}, 100);
+				}
+			}, 1000);
+		}
+	});
 </script>
 
 <div class="status-bar">
@@ -91,6 +116,7 @@
 				<label for="alphabet-select">Alphabet:</label>
 				<select 
 					id="alphabet-select" 
+					class:flash={flashAlphabet}
 					bind:value={$appState.selectedAlphabet}
 					on:change={(e) => appState.setAlphabet(e.currentTarget.value as AlphabetType)}
 				>
@@ -304,6 +330,26 @@
 		outline: none;
 		border-color: #ffd700;
 		box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
+	}
+
+	.control-group select.flash {
+		animation: flash-select 1s ease-in-out;
+	}
+
+	@keyframes flash-select {
+		0%, 100% {
+			background: rgba(255, 255, 255, 0.9);
+			border-color: rgba(255, 255, 255, 0.3);
+		}
+		16.666%, 50%, 83.333% {
+			background: rgba(255, 237, 78, 1);
+			border-color: #ffd700;
+			box-shadow: 0 0 0 5px rgba(255, 215, 0, 0.6);
+		}
+		33.333%, 66.666% {
+			background: rgba(255, 255, 255, 0.9);
+			border-color: rgba(255, 255, 255, 0.3);
+		}
 	}
 
 	@media (max-width: 968px) {

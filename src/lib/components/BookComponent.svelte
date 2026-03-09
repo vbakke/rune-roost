@@ -69,19 +69,16 @@
 	function handleTouchStart(e: TouchEvent) {
 		isDragging = false;
 		startX = e.touches[0].clientX;
-		console.log(`touchStart: startX=${startX} (currentX=${currentX})`);
 	}
 
 	function handleTouchMove(e: TouchEvent) {
 		isDragging = true;
 		currentX = e.touches[0].clientX;
-		console.log(`touchMove: (startX=${startX}) currentX=${currentX}`);
 	}
 
 	function handleTouchEnd() {
 		if (isDragging) {	
 			const diff = startX - currentX;
-			console.log(`touchEnd: startX=${startX} currentX=${currentX} = diff=${diff}`);
 			if (Math.abs(diff) > dragThreshold) {
 				if (diff > 0) {
 					nextPage();
@@ -110,10 +107,10 @@
 		currentX = e.clientX;
 	}
 
-	function handleMouseUp() {
+	function handleMouseUp(e: MouseEvent) {
 		if (!isDragging) return;
 		
-		const diff = startX - currentX;
+		const diff = startX - e.clientX;
 		if (Math.abs(diff) > dragThreshold) {
 			if (diff > 0) {
 				nextPage();
@@ -257,7 +254,6 @@
 		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 		overflow: hidden;
 		position: relative;
-		cursor: grab;
 		user-select: none;
 	}
 
