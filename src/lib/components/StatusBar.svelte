@@ -110,13 +110,13 @@
 		</div>
 
 		<!-- Right section: Alphabet and Encoding selectors -->
-		{#if alphabets.length > 0}
 		<div class="controls">
 			<div class="control-group">
 				<label for="alphabet-select">Alphabet:</label>
 				<select 
 					id="alphabet-select" 
 					class:flash={flashAlphabet}
+					disabled={alphabets.length <= 1}
 					bind:value={$appState.selectedAlphabet}
 					on:change={(e) => appState.setAlphabet(e.currentTarget.value as AlphabetType)}
 				>
@@ -130,6 +130,7 @@
 				<label for="encoding-select">Encoding:</label>
 				<select 
 					id="encoding-select"
+					disabled={encodings.length <= 1}
 					bind:value={$appState.selectedEncoding}
 					on:change={(e) => appState.setEncoding(e.currentTarget.value as EncodingType)}
 				>
@@ -139,7 +140,6 @@
 				</select>
 			</div>
 		</div>
-		{/if}
 	</div>
 </div>
 
@@ -330,6 +330,12 @@
 		outline: none;
 		border-color: #ffd700;
 		box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
+	}
+
+	.control-group select:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+		background: rgba(200, 200, 200, 0.5);
 	}
 
 	.control-group select.flash {

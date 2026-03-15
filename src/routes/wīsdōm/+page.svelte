@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import SEO from '$lib/components/SEO.svelte';
 	import { skills, realmColors, skillLinks, type SkillNode } from '$lib/data/skills';
+	import { learnedSkills } from '$lib/skills/learnedSkills';
 	import HarvestRune from '$lib/components/runes/HarvestRune.svelte';
 	import EarthRune from '$lib/components/runes/EarthRune.svelte';
 	import DayRune from '$lib/components/runes/DayRune.svelte';
@@ -11,6 +12,16 @@
 	import CannotLearnIcon from '$lib/components/icons/CannotLearnIcon.svelte';
 
 	let selectedSkill: SkillNode | null = null;
+
+	// Create reactive skills based on learned skills
+	let reactiveSkills = $derived(
+		skills.map((skill) => ({
+			...skill,
+			state: $learnedSkills.has(skill.id as any)
+				? 'LEARNT'
+				: skill.state
+		}))
+	);
 
 	function selectSkill(skill: SkillNode) {
 		if (skill.state !== 'INVISIBLE') {
@@ -31,8 +42,8 @@
 		selectedSkill = null;
 	}
 
-	const positionById = new Map(skills.map((skill) => [skill.id, skill.position]));
-	const realmById = new Map(skills.map((skill) => [skill.id, skill.realm]));
+	const positionById = new Map(reactiveSkills.map((skill) => [skill.id, skill.position]));
+	const realmById = new Map(reactiveSkills.map((skill) => [skill.id, skill.realm]));
 	
 	const dependencyLines = skillLinks
 		.map((link) => {
@@ -56,8 +67,8 @@
 			line !== null
 		);
 
-	const encodingSkills = skills.filter((s) => s.realm === 'ENCODING');
-	const mainSkills = skills.filter((s) => s.realm !== 'ENCODING' && s.id !== 'center');
+	const encodingSkills = reactiveSkills.filter((s) => s.realm === 'ENCODING');
+	const mainSkills = reactiveSkills.filter((s) => s.realm !== 'ENCODING' && s.id !== 'center');
 
 	const structuredData = {
 		'@context': 'https://schema.org',
@@ -144,10 +155,10 @@
 								<div class="node-circle">
 									{#if skill.state === 'CANNOT_LEARN'}
 										<CannotLearnIcon />
-									{:else if skill.state === 'LEARNT'}
-										<HarvestRune />
 									{:else if skill.realm === 'ENCODING'}
 										<QuillIcon size="2em" />
+									{:else if skill.state === 'LEARNT'}
+										<HarvestRune />
 									{:else}
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
 											<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
@@ -189,8 +200,8 @@
 
 				<div class="skill-nodes">
 					<!-- Center node -->
-					{#if skills.find((s) => s.id === 'center')}
-						{@const centerSkill = skills.find((s) => s.id === 'center')}
+					{#if reactiveSkills.find((s) => s.id === 'center')}
+						{@const centerSkill = reactiveSkills.find((s) => s.id === 'center')}
 						<button
 							class="skill-node"
 							class:learnt={centerSkill.state === 'LEARNT'}

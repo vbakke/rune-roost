@@ -13,14 +13,14 @@
 	const BOY: string = 'BOY';
 
 	let currentPage = $state(0);
-	let secretKey: number = $state(2);
+	let secretKey: number = $state(7);
 	let alphabetFlash = $state(false);
 	let previousAlphabet = $state('');
 	let previousSelectedAlphabet = $state($appState.selectedAlphabet);
 	
-	// Use Latin alphabet if learned, otherwise Roman
+	// Use selected alphabet from appState, respecting which ones are learned
 	let alphabet: string = $derived(
-		$learnedSkills.has('encoding.latin') 
+		$appState.selectedAlphabet === 'LATIN' && $learnedSkills.has('encoding.latin')
 			? Message.LATIN_ALPHABET 
 			: Message.ROMAN_ALPHABET
 	);
