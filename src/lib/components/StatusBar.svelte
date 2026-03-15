@@ -82,7 +82,7 @@
 				<span class="nav-label">Training</span>
 			</a>
 			
-			<a href="/lær/beginning" class="nav-link book-link" title="Books of Learning">
+			<a href="/lær/beginning" class="nav-link book-link" title="Books of Learning" data-testid="learn-button">
 				<BookIcon open={isLearningPage} />
 				<span class="nav-label">Learn</span>
 			</a>

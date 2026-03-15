@@ -6,6 +6,7 @@
     import SkillTreeIcon from '$lib/components/icons/SkillTreeIcon.svelte';
     import DiceIcon from '$lib/components/icons/DiceIcon.svelte';
 	import CipherText from '$lib/components/CipherText.svelte';
+	import DecryptLessonModal from '$lib/components/DecryptLessonModal.svelte';
 	import { Message } from '$lib/model/Message.svelte';
 	import type { SymmetricEncryption } from '$lib/model/sym/SymmetricEncryption';
 	import type { AsymmetricEncryption } from '$lib/model/asym/AsymmetricCertificate';
@@ -16,6 +17,7 @@
     import { CaesarHash } from '$lib/model/hash/CaesarHash';
     import { learnedSkills } from '$lib/skills/learnedSkills';
     import { canAccess } from '$lib/skills/skillTree';
+    import { decryptionModalStore } from '$lib/stores/decryptionModalStore';
     import { prefNow } from '$lib/utils/utils.ts';
 
 	let showSymmetricDecrypt = $derived(
@@ -154,11 +156,8 @@
 			<button
 				class="lesson-button"
 				onclick={() => {
-					setTimeout(() => {
-						console.log(`${prefNow()} Learned sym.decrypt`);
-						learnedSkills.add('sym.decrypt');
-					}, 500);
-					goto('/lær/beginning#p2');
+					console.log(`${prefNow()} Opening decrypt lesson modal`);
+					decryptionModalStore.open();
 				}}
 			>
 				<RavenIcon />
@@ -255,6 +254,9 @@
 		</div>
 	</div>
 </div>
+
+<!-- Decryption Lesson Modal -->
+<DecryptLessonModal />
 
 <style>
 	.spacer {
