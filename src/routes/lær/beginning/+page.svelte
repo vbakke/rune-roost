@@ -8,6 +8,7 @@
 	import { alphabetLearning } from '$lib/stores/alphabetLearning';
 	import { appState } from '$lib/stores/appState';
     import { Message } from '$lib/model/Message.svelte';
+    import { prefNow } from '$lib/utils/utils.ts';
 
 	const ABBA: string = 'ABBA';
 	const BOY: string = 'BOY';
@@ -27,28 +28,16 @@
 	
 	let shiftedAlphabet: string = $derived(shifted(alphabet));
 
-	// Watch for alphabet changes (from learning or manual selection) and trigger flash
-	$effect(() => {
-		if (previousAlphabet && previousAlphabet !== alphabet) {
-			// Delay flash to start after StatusBar flash completes
-			setTimeout(() => {
-				alphabetFlash = true;
-				setTimeout(() => {
-					alphabetFlash = false;
-				}, 1500);
-			}, 1200);
-		}
-		previousAlphabet = alphabet;
-	});
-
 	// Watch for manual alphabet changes in StatusBar
 	$effect(() => {
 		if (previousSelectedAlphabet !== $appState.selectedAlphabet) {
 			if (previousSelectedAlphabet) {
+				console.log(`${prefNow()}: Detected manual alphabet change to ${$appState.selectedAlphabet}, triggering flash`);
 				alphabetFlash = true;
 				setTimeout(() => {
+					console.log(`${prefNow()}: Stopping flash for manual detected ${$appState.selectedAlphabet}`);
 					alphabetFlash = false;
-				}, 1500);
+				}, 1000);
 			}
 			previousSelectedAlphabet = $appState.selectedAlphabet;
 		}
@@ -346,7 +335,7 @@
 	}
 	
 	.flash-alphabet {
-		animation: flash-alphabet 1.5s ease-in-out;
+		animation: flash-alphabet 1s ease-in-out;
 	}
 	
 	@keyframes flash-alphabet {

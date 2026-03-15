@@ -9,6 +9,7 @@
 	import BookIcon from './icons/BookIcon.svelte';
 	import RavenIcon from './icons/RavenIcon.svelte';
 	import DiceIcon from './icons/DiceIcon.svelte';
+    import { prefNow } from '$lib/utils/utils.ts';
 
 	let stats = $derived(calculateSkillStats($learnedSkills));
 	let isLearningPage = $derived($page.url.pathname.startsWith('/lær'));
@@ -43,20 +44,24 @@
 	$effect(() => {
 		if ($alphabetLearning.newlyLearnedAlphabet && $alphabetLearning.flashAlphabet) {
 			// Flash the dropdown for 1 second (3 flashes)
+			console.log(`${prefNow()}: Detected newly learned alphabet ${$alphabetLearning.newlyLearnedAlphabet}, triggering flash`);	
 			flashAlphabet = true;
 			
 			setTimeout(() => {
 				// Stop flashing and switch to the newly learned alphabet
+				console.log(`${prefNow()}: Stopping flash StatusBar flash ${$appState.selectedAlphabet}, triggering flash`);
 				flashAlphabet = false;
 				alphabetLearning.clearFlash();
 				
 				if ($alphabetLearning.newlyLearnedAlphabet) {
+					console.log(`${prefNow()}: Setting alphabet to newly learned ${$alphabetLearning.newlyLearnedAlphabet}`);
 					appState.setAlphabet($alphabetLearning.newlyLearnedAlphabet);
 					
 					// Clear the learning state after switching
 					setTimeout(() => {
+						console.log(`${prefNow()}: Clearing newly learned alphabet state for ${$alphabetLearning.newlyLearnedAlphabet}`);
 						alphabetLearning.clear();
-					}, 100);
+					}, 300);
 				}
 			}, 1000);
 		}
