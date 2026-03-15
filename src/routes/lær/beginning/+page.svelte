@@ -9,6 +9,8 @@
 	import { appState } from '$lib/stores/appState';
     import { Message } from '$lib/model/Message.svelte';
     import { prefNow } from '$lib/utils/utils.ts';
+    import ArrowLeftRune from '$lib/components/runes/ArrowLeftRune.svelte';
+    import ArrowRightRune from '$lib/components/runes/ArrowRightRune.svelte';
 
 	const ABBA: string = 'ABBA';
 	const BOY: string = 'BOY';
@@ -42,12 +44,6 @@
 			previousSelectedAlphabet = $appState.selectedAlphabet;
 		}
 	});
-
-	function onShiftAlphabet(e: Event, direction: number) {
-		e.preventDefault();
-		e.stopPropagation();
-		shift(direction);
-	}
 
 	function shift(direction: number) {
 		secretKey = (secretKey + direction + alphabet.length) % alphabet.length;
@@ -152,14 +148,10 @@
 					<span class="secret-key">secret key:<br/><code>{ secretKeyIdentifier(secretKey) }</code></span>
 					<div class="buttons">
 						<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
-							<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
-								<path d="M 11 4 L 5 12 L 11 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-							</svg>
+							<ArrowLeftRune />
 						</button>
 						<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>
-							<svg viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg">
-								<path d="M 7 4 L 13 12 L 7 20" stroke="brown" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-							</svg>
+							<ArrowRightRune />
 						</button>
 					</div>
 				</div>
@@ -353,10 +345,6 @@
 		}
 	}
 	
-	.alaphabet-rot .book-button svg {
-		width: 22px;
-		height: 26px;
-	}
 	.alaphabet-rot .buttons {
 		margin-top: 0.3rem;
 	}

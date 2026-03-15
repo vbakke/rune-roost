@@ -36,13 +36,19 @@ export const skillTree = {
             dependsOn: ['encoding.ascii']
         }
     },
+    basic: {
+        'basic.distinctions': {
+            label: 'Basic knowledge',
+            description: 'Learn the distinctions.'
+        },
+    },
     symmetric: {
         'sym.encrypt': {
             label: 'Encrypt'
         },
         'sym.decrypt': {
             label: 'Decrypt',
-            dependsOn: ['sym.encrypt'],
+            dependsOn: ['basic.distinctions'],
         },
         'sym.block_size': {
             label: 'Encrypt with AES',
