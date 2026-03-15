@@ -179,7 +179,7 @@
 				    And {BOY}: <code>{BOY} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(BOY), secretKey))}</code> <br/>
 				</p>
 				<LearnCoin topic="sym.decrypt" />
-				<div class="blur">
+				<div class:blur={!$learnedSkills.has('sym.decrypt')}>
 					<h3>Decrypt</h3>
 					<p>To decrypt, we just reverse the operation:<br/>
 						<code>{decode(encrypt(encode(ABBA), secretKey))} ⊖ {secretKeyIdentifier(secretKey)} = {ABBA}</code> 

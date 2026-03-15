@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
 	import PlainText from '$lib/components/PlainText.svelte';
 	import Key from '$lib/components/Key.svelte';
@@ -15,11 +16,10 @@
     import { CaesarHash } from '$lib/model/hash/CaesarHash';
     import { learnedSkills } from '$lib/skills/learnedSkills';
     import { canAccess } from '$lib/skills/skillTree';
+    import { prefNow } from '$lib/utils/utils.ts';
 
-	let userWantsDecrypt = $state(false);
 	let showSymmetricDecrypt = $derived(
-		userWantsDecrypt &&
-		canAccess(['gate:training.symmetric.decryptPane'], $learnedSkills)
+		$learnedSkills.has('sym.decrypt')
 	);
 
 	// 1. Simple reactive state for user text input
@@ -49,7 +49,6 @@
 	);
 
 	// 7. Decrypt state
-	// Controlled by userWantsDecrypt and learned skills.
 	let symmetricDecrypted = $derived(symmetricCipher.decrypt(symmetricEncrypted, symmetricKey));
 	let asymmetricDecrypted = $derived(asymmetricCipher.decrypt(asymmetricEncrypted, asymmetricCert.privateKey));
 
@@ -155,10 +154,11 @@
 			<button
 				class="lesson-button"
 				onclick={() => {
-					if (!$learnedSkills.has('sym.caesar.decrypt')) {
-						learnedSkills.add('sym.caesar.decrypt');
-					}
-					userWantsDecrypt = !userWantsDecrypt;
+					setTimeout(() => {
+						console.log(`${prefNow()} Learned sym.decrypt`);
+						learnedSkills.add('sym.decrypt');
+					}, 500);
+					goto('/lær/beginning#p2');
 				}}
 			>
 				<RavenIcon />

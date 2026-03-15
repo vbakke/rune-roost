@@ -82,14 +82,14 @@
 				<span class="nav-label">Training</span>
 			</a>
 			
-			<a href="/lær" class="nav-link book-link" title="Books of Learning">
+			<a href="/lær/beginning" class="nav-link book-link" title="Books of Learning">
 				<BookIcon open={isLearningPage} />
 				<span class="nav-label">Learn</span>
 			</a>
 		</div>
 
 		<!-- Center section: Stats -->
-		<div class="stats">
+		<!-- <div class="stats">
 			<div class="stat-item overall">
 				<span class="stat-icon">🏆</span>
 				<div class="stat-content">
@@ -112,7 +112,7 @@
 					</div>
 				{/each}
 			</div>
-		</div>
+		</div> -->
 
 		<!-- Right section: Alphabet and Encoding selectors -->
 		<div class="controls">

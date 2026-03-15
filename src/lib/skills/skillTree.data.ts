@@ -37,7 +37,7 @@ export const skillTree = {
         }
     },
     basic: {
-        'basic.distinctions': {
+        'basic.knowledge': {
             label: 'Basic knowledge',
             description: 'Learn the distinctions.'
         },
@@ -48,11 +48,15 @@ export const skillTree = {
         },
         'sym.decrypt': {
             label: 'Decrypt',
-            dependsOn: ['basic.distinctions'],
+            dependsOn: ['basic.knowledge'],
         },
         'sym.block_size': {
-            label: 'Encrypt with AES',
+            label: 'Block size',
             dependsOn: ['sym.decrypt']
+        },
+        'sym.otp': {
+            label: 'One-time pad',
+            dependsOn: ['sym.block_size']
         },
         'sym.aes.encrypt': {
             label: 'Encrypt with AES',
