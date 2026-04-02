@@ -8,11 +8,11 @@ export class SymCaesar implements SymmetricEncryption
 {
     encrypt(message: Message, secret: SecretKey): Message
     {
-        return CaesarRot.rotateStringForward(message.plain, secret.key.plain);
+        return CaesarRot.rotateStringForward(message.plain, secret.key.plain, secret.alphabet);
     }
     
     decrypt(ciphertext: Message, secret: SecretKey): Message {
-        return CaesarRot.rotateStringReverse(ciphertext.plain, secret.key.plain);
+        return CaesarRot.rotateStringReverse(ciphertext.plain, secret.key.plain, secret.alphabet);
     }
 
 }

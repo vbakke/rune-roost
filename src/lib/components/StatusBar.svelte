@@ -128,8 +128,8 @@
 					id="alphabet-select" 
 					class:flash={flashAlphabet}
 					disabled={alphabets.length <= 1}
-					bind:value={$appState.selectedAlphabet}
-					on:change={(e) => appState.setAlphabet(e.currentTarget.value as AlphabetType)}
+					value={$appState.selectedAlphabet}
+					onchange={(e) => appState.setAlphabet(e.currentTarget.value as AlphabetType)}
 				>
 					{#each alphabets as alphabet}
 						<option value={alphabet.value}>{alphabet.label}</option>
@@ -142,8 +142,8 @@
 				<select 
 					id="encoding-select"
 					disabled={encodings.length <= 1}
-					bind:value={$appState.selectedEncoding}
-					on:change={(e) => appState.setEncoding(e.currentTarget.value as EncodingType)}
+					value={$appState.selectedEncoding}
+					onchange={(e) => appState.setEncoding(e.currentTarget.value as EncodingType)}
 				>
 					{#each encodings as encoding}
 						<option value={encoding.value}>{encoding.label}</option>

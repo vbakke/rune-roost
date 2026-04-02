@@ -5,8 +5,7 @@ import { Message } from "../Message.svelte.ts";
 export class SecretKey {
     public key: Message = $state(new Message(''));
 
-    constructor(private alphabet: string) {
-        this.alphabet = alphabet;
+    constructor(public alphabet: string) {
         this.generateKey();
     }
 
