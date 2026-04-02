@@ -2,16 +2,15 @@ import { Message } from "../model/Message.svelte.ts";
 
 export class CaesarRot
 {
-    public static rotateStringForward(input: string, secretKey: string): Message {
-        return this.rotateString(input, secretKey, +1);
+    public static rotateStringForward(input: string, secretKey: string, alphabet:string = Message.ROMAN_ALPHABET): Message {
+        return this.rotateString(input, secretKey, +1, alphabet);
     }
 
-    public static rotateStringReverse(input: string, secretKey: string): Message {
-        return this.rotateString(input, secretKey, -1);
+    public static rotateStringReverse(input: string, secretKey: string, alphabet:string = Message.ROMAN_ALPHABET): Message {
+        return this.rotateString(input, secretKey, -1, alphabet);
     }
 
-    public static rotateString(input: string, secretKey: string, direction: number): Message {
-        const alphabet = Message.ROMAN_ALPHABET;
+    public static rotateString(input: string, secretKey: string, direction: number, alphabet:string = Message.ROMAN_ALPHABET): Message {
         let rotated: string = "";
         let keyIndex: number = 0;
         for (let char of input) {

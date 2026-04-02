@@ -3,18 +3,19 @@ import { Message } from "../Message.svelte.ts";
 
 export class CaesarHash
 {
-    public static hash2(text1: string, text2: string): Message {
-        return CaesarRot.rotateStringForward(text1, text2);
-    }
-
-    public static hash(msg: Message): Message {
+    public static hash(msg: Message, alphabet: string = Message.ROMAN_ALPHABET): Message {
         if (!msg || msg.plain.length === 0) {
             return new Message('');
         }
-
-        let hash: string = msg.plain[0];
-        for (let c: string of msg.plain.slice(1)) {
-            hash = CaesarRot.rotateStringForward(hash, c).plain;
+        let len = 3;
+        let hash: string = msg.plain.substring(0, len);
+        console.log(`Initial hash: ${hash}`);
+        let i = len;
+        while (i < msg.plain.length) {
+            let c = msg.plain.substring(i, i + len);
+            i += len;
+            hash = CaesarRot.rotateStringForward(hash, c, alphabet).plain;
+            console.log(`After processing '${c}': ${hash}`);
         }
         return new Message(hash);    
     }
