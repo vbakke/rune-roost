@@ -175,9 +175,17 @@
 					<em>"rollover addition"</em> to mean if we roll past 
 					<code>{alphabet.slice(-1)}</code> we continue on <code>{alphabet.slice(0, 1)}</code>.
 				</p>
-				<p>Encrypting<br/>{ABBA}: <code>{ABBA} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(ABBA), secretKey))}</code> <br/>
-				    And {BOY}: <code>{BOY} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(BOY), secretKey))}</code> <br/>
-				</p>
+				<div class="hbox oops-box">
+					<p>Encrypting<br/>{ABBA}: <code>{ABBA} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(ABBA), secretKey))}</code> <br/>
+						And {BOY}: <code>{BOY} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(BOY), secretKey))}</code> <br/>
+					</p>			
+					{#if secretKey == 0}						
+					<span class="oops">
+						😱
+					</span>
+					{/if}		
+				</div>
+
 				<LearnCoin topic="sym.decrypt" />
 				<div class:blur={!$learnedSkills.has('sym.decrypt')}>
 					<h3>Decrypt</h3>
@@ -385,6 +393,16 @@
 		transform: translateY(-2px);
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 	}
+
+	.oops-box {
+		justify-content: space-between;
+    	align-items: flex-end;
+	}
+
+	.oops {
+		font-size: 2.3rem;
+	}
+		
 
 	.raven-icon {
 		width: 24px;

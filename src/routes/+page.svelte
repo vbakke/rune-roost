@@ -83,7 +83,7 @@
 			</figure>
 			<p class="highlight">
 				<em>"Never roll your own encryption"</em><br/> 
-				- But even ready-mades can be used incorrectly! Learn the pitfalls!
+				- But! Even ready-mades can be used incorrectly! Learn the pitfalls
 			</p>
 			<p>
 				You will start as a novice, and choose your own path to evolve your skills.

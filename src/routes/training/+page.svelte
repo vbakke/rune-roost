@@ -24,6 +24,10 @@
 		$learnedSkills.has('sym.decrypt')
 	);
 
+	let showAsymmetricDecrypt = $derived(
+		$learnedSkills.has('asym.decrypt')
+	);
+
 	// 1. Simple reactive state for user text input
 	let alphabet = $state(Message.ROMAN_ALPHABET);
 
@@ -147,8 +151,7 @@
 			<div class="spacer"></div>
 		</div>
 
-		<div class="lesson">
-			
+		<div class="lesson">			
 			<button class="dice-button" onclick={regenerateSymmetricKey} title="Generate new key">
 				<DiceIcon />
 			</button>
@@ -165,7 +168,7 @@
 					<div class="key-icon gold">🔑</div>
 					<div class="key-value">{symmetricKey.key.plain}</div>
 				</div>
-				<span>{showSymmetricDecrypt ? 'Hide' : 'Decrypt'}</span>
+				<span>{showSymmetricDecrypt ? 'Test' : 'Decrypt'}</span>
 			</button>
 		</div>
 
@@ -176,36 +179,43 @@
 		<div class="pane-header">
 			<h2>Asymmetric</h2>
 		</div>
-		<div class="encryption-flow">
-			<PlainText bind:value={userInput} />
+		<div class="work-table">
+			<div class="encryption-flow">
+				<PlainText bind:value={userInput} />
 
-			<div class="arrow">→</div>
+				<div class="arrow">→</div>
 
-			<Key value={asymmetricCert.publicKey.plain} type="silver"
-				onclick={() => asymmetricCert.generateNextPublicKey()}  />
+				<Key value={asymmetricCert.publicKey.plain} type="silver"
+					onclick={() => asymmetricCert.generateNextPublicKey()}  />
 
-			<div class="arrow">→</div>
+				<div class="arrow">→</div>
 
-			<CipherText value={asymmetricEncrypted} />
+				<CipherText value={asymmetricEncrypted} />
 
+			</div>
+			{#if showAsymmetricDecrypt}
+			<div class="encryption-flow">
+				<CipherText value={asymmetricEncrypted} />
+
+				<div class="arrow">→</div>
+
+				<Key 
+					value={asymmetricCert.privateKey.plain} 
+					type="gold" 
+					reverse={false}
+					onclick={() => asymmetricCert.generateNextPrivateKey()} 
+				/>
+
+				<div class="arrow">→</div>
+
+				<PlainText value={asymmetricDecrypted.plain} icon="eye" readonly={true} />
+			
+			</div>
+			{/if}
+
+			<div class="spacer"></div>
 		</div>
-		<div class="encryption-flow">
-			<CipherText value={asymmetricEncrypted} />
 
-			<div class="arrow">→</div>
-
-			<Key 
-				value={asymmetricCert.privateKey.plain} 
-				type="gold" 
-				reverse={false}
-				onclick={() => asymmetricCert.generateNextPrivateKey()} 
-			/>
-
-			<div class="arrow">→</div>
-
-			<PlainText value={asymmetricDecrypted.plain} icon="eye" readonly={true} />
-		
-		</div>
 		<div class="lesson">
 			<button class="dice-button" onclick={regenerateAsymmetricKey} title="Generate new key">
 				<DiceIcon />
@@ -221,7 +231,7 @@
 					<div class="key-icon gold">🔑</div>
 					<div class="key-value">{asymmetricCert.privateKey.plain}</div>
 				</div>
-				<span>Decrypt</span>
+				<span>{showAsymmetricDecrypt ? 'Test' : 'Decrypt'}</span>				
 			</a>
 		</div>
 	</div>

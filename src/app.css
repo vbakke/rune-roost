@@ -72,6 +72,16 @@ todo::before {
 	content: "🛠️ ToDo: ";
 }
 
+.hbox {
+	display: flex;
+	flex-direction: row;
+}
+
+.vbox {
+	display: flex;
+	flex-direction: column;
+}
+
 .fondamento-regular-italic {
   font-family: "Fondamento", cursive;
   font-weight: 400;
