@@ -17,7 +17,7 @@
 			🔑
 		{/if}
 	</div>
-	<div class="key-value"><span class="plus">{reverse ? '⊖' : '⊕'}</span> <span class="digit">{value}</span></div>
+	<div class="key-value"><span class="operator" class:gold={reverse}>{reverse ? '⊖' : '⊕'}</span> <span class="digit">{value}</span></div>
 </div>
 
 <style>
@@ -78,10 +78,13 @@
 		color: #ecdfff;
 	}
 
-	.plus {
-		font-size: 0.9em;
+	.operator {
+		font-size: 1.2em;
 		color: #ecdfff;
 		font-weight: bold;
+	}
+	.operator.gold {
+		color: #f5c518;
 	}
 
 	@media (max-width: 768px) {
