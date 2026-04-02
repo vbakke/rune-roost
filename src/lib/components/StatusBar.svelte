@@ -47,23 +47,29 @@
 			console.log(`${prefNow()}: Detected newly learned alphabet ${$alphabetLearning.newlyLearnedAlphabet}, triggering flash`);	
 			flashAlphabet = true;
 			
-			setTimeout(() => {
-				// Stop flashing and switch to the newly learned alphabet
-				console.log(`${prefNow()}: Stopping flash StatusBar flash ${$appState.selectedAlphabet}, triggering flash`);
+			// Stop flashing and switch to newly learned alphabet after 1 second
+			const flashTimer = setTimeout(() => {
+				console.log(`${prefNow()}: Flash complete, switching to ${$alphabetLearning.newlyLearnedAlphabet}`);
 				flashAlphabet = false;
 				alphabetLearning.clearFlash();
 				
 				if ($alphabetLearning.newlyLearnedAlphabet) {
 					console.log(`${prefNow()}: Setting alphabet to newly learned ${$alphabetLearning.newlyLearnedAlphabet}`);
 					appState.setAlphabet($alphabetLearning.newlyLearnedAlphabet);
-					
-					// Clear the learning state after switching
-					setTimeout(() => {
-						console.log(`${prefNow()}: Clearing newly learned alphabet state for ${$alphabetLearning.newlyLearnedAlphabet}`);
-						alphabetLearning.clear();
-					}, 300);
 				}
 			}, 1000);
+			
+			// Clear the learning state 300ms after flash ends (total 1300ms)
+			const clearTimer = setTimeout(() => {
+				console.log(`${prefNow()}: Clearing newly learned alphabet state for ${$alphabetLearning.newlyLearnedAlphabet}`);
+				alphabetLearning.clear();
+			}, 1300);
+			
+			// Cleanup timers if effect re-runs or component unmounts
+			return () => {
+				clearTimeout(flashTimer);
+				clearTimeout(clearTimer);
+			};
 		}
 	});
 </script>
