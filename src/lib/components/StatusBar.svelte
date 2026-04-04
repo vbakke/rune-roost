@@ -204,7 +204,7 @@
 		border-color: rgba(255, 255, 255, 0.3);
 	}
 
-	.nav-link :global(svg) {
+	.nav-link svg {
 		width: 1.5rem;
 		height: 1.5rem;
 	}
