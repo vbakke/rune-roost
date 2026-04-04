@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
 	import PlainText from '$lib/components/PlainText.svelte';
 	import Key from '$lib/components/Key.svelte';
@@ -7,6 +8,7 @@
     import DiceIcon from '$lib/components/icons/DiceIcon.svelte';
 	import CipherText from '$lib/components/CipherText.svelte';
 	import DecryptLessonModal from '$lib/components/DecryptLessonModal.svelte';
+	import TextbookModal from '$lib/components/TextbookModal.svelte';
 	import { Message } from '$lib/model/Message.svelte';
 	import type { SymmetricEncryption } from '$lib/model/sym/SymmetricEncryption';
 	import type { AsymmetricEncryption } from '$lib/model/asym/AsymmetricCertificate';
@@ -22,6 +24,10 @@
     import { decryptionModalStore } from '$lib/stores/decryptionModalStore';
     import { prefNow } from '$lib/utils/utils.ts';
 	import { appState } from '$lib/stores/appState';
+    import HarvestRune from '$lib/components/runes/HarvestRune.svelte';
+    import EarthRune from '$lib/components/runes/EarthRune.svelte';
+    import DayRune from '$lib/components/runes/DayRune.svelte';
+	import { onMount } from 'svelte';
 
 	let showSymmetricDecrypt = $derived(
 		$learnedSkills.has('sym.decrypt')
@@ -30,6 +36,12 @@
 	let showAsymmetricDecrypt = $derived(
 		$learnedSkills.has('asym.decrypt')
 	);
+
+	// Textbook modal states
+	let showBasicKnowledgeModal = $state(false);
+	let showSymmetricDecryptModal = $state(false);
+	let showAsymmetricDecryptModal = $state(false);
+	let showHashingOverviewModal = $state(false);
 
 	// Get alphabet from global appState (reactive to changes in StatusBar)
 	let alphabet = $derived(
@@ -109,6 +121,7 @@
 	let hashLeft = $derived(message.plain.substring(0, message.plain.length / 2 + 0.5));
 	let hashRight = $derived(message.plain.substring(hashLeft.length));
 	let hash = $derived(CaesarHash.hash(message, alphabet));
+
 </script>
 
 <div class="container">
@@ -173,8 +186,7 @@
 			<button
 				class="lesson-button"
 				onclick={() => {
-					console.log(`${prefNow()} Opening decrypt lesson modal`);
-					decryptionModalStore.open();
+					showSymmetricDecryptModal = true;
 				}}
 			>
 				<RavenIcon />
@@ -235,7 +247,12 @@
 				<DiceIcon />
 			</button>
 
-			<a href="/lær/asymmetric" class="lesson-button">
+			<button
+				class="lesson-button"
+				onclick={() => {
+					showAsymmetricDecryptModal = true;
+				}}
+			>
 				<RavenIcon />
 				<div class="key">
 					<div class="key-icon silver">🔑</div>
@@ -246,7 +263,7 @@
 					<div class="key-value">{asymmetricCert.privateKey.plain}</div>
 				</div>
 				<span>{showAsymmetricDecrypt ? 'Test' : 'Decrypt'}</span>				
-			</a>
+			</button>
 		</div>
 	</div>
 
@@ -258,13 +275,18 @@
 		<div class="encryption-flow">
 			<PlainText bind:value={userInput} />
 
+			<div class="arrow">→</div>
+
 			<div class="desk hash-function">
-				{#each digits as digit, i}
+				<div class="hash-box">
+					<EarthRune />
+				</div>
+				<!-- {#each digits as digit, i}
 					<span class="digit">{digit}</span>
 					{#if i < digits.length - 1}
 					<span class="plus">⊕</span>
 					{/if}
-				{/each}
+				{/each} -->
 			</div>
 
 			<div class="arrow">→</div>
@@ -272,13 +294,19 @@
 			<CipherText value={hash.plain} />
 			
 			<div class="spacer"></div>
-			<a href="/lær/hashing" class="lesson-button">
+			<button class="lesson-button" onclick={() => { showHashingOverviewModal = true; }}>
 				<RavenIcon />
 				<span>Decrypt</span>
-			</a>
+			</button>
 		</div>
 	</div>
 </div>
+
+<!-- Textbook Modals -->
+<TextbookModal isOpen={showBasicKnowledgeModal} skillId="basic.knowledge" onClose={() => { showBasicKnowledgeModal = false; }} />
+<TextbookModal isOpen={showSymmetricDecryptModal} skillId="sym.decrypt" onClose={() => { showSymmetricDecryptModal = false; }} />
+<TextbookModal isOpen={showAsymmetricDecryptModal} skillId="asym.decrypt" onClose={() => { showAsymmetricDecryptModal = false; }} />
+<TextbookModal isOpen={showHashingOverviewModal} skillId="hashing.overview" onClose={() => { showHashingOverviewModal = false; }} />
 
 <!-- Decryption Lesson Modal -->
 <DecryptLessonModal />
@@ -441,6 +469,15 @@
 	}
 	.key-icon.silver {
 		filter: grayscale(100%) brightness(1.1) contrast(1.3);
+	}
+
+	.hash-box {
+		padding: 7px 7px 5px;
+		background: #ffd591;
+		color: #c36241;
+		border: 1px solid #ada883;
+		border-radius: 7px;
+		line-height: 1;
 	}
 	
 	.arrow {

@@ -86,6 +86,10 @@ export const skillTree = {
         },
     },
     hashing: {
+        'hashing.overview': {
+            label: 'Hashing Overview',
+            description: 'Learn why hashing is one-way and cannot be decrypted, and how it differs from encryption.'
+        },
         'hashing.cross_sum': {
             label: 'Cross sum',
             description: 'In this simple example of a hash function, we take the cross sum of a number and then apply a Caesar cipher to it. This is not a secure hash function, but it illustrates the concept of hashing.'

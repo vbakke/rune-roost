@@ -4,6 +4,8 @@
 	import Page from '$lib/components/Page.svelte';
 	import LearnCoin from '$lib/components/LearnCoin.svelte';
 	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
+	import TextbookModal from '$lib/components/TextbookModal.svelte';
+
 	import { learnedSkills } from '$lib/skills/learnedSkills';
 	import { alphabetLearning } from '$lib/stores/alphabetLearning';
 	import { appState } from '$lib/stores/appState';
@@ -17,6 +19,7 @@
 
 	let currentPage = $state(0);
 	let secretKey: number = $state(7);
+	let showBasicKnowledgeModal = $state(false);
 	let alphabetFlash = $state(false);
 	let previousAlphabet = $state('');
 	let previousSelectedAlphabet = $state($appState.selectedAlphabet);
@@ -147,10 +150,10 @@
 					<code class:flash-alphabet={alphabetFlash}>{ shiftedAlphabet }</code>
 					<span class="secret-key">secret key:<br/><code>{ secretKeyIdentifier(secretKey) }</code></span>
 					<div class="buttons">
-						<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
+						<button class="book-button" onclick={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
 							<ArrowLeftRune />
 						</button>
-						<button class="book-button" on:click={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>
+						<button class="book-button" onclick={(e) => { e.preventDefault(); e.stopPropagation(); shift(-1); }}>
 							<ArrowRightRune />
 						</button>
 					</div>
@@ -210,15 +213,17 @@
 					Let's dive into the confusion:<br/>
 				</p>
 				<div class="mid">
-					<a href="/training" class="lesson-button">
+					<button class="lesson-button" onclick={() => { showBasicKnowledgeModal = true; }}>
 						<RavenIcon />
 						<span>Learn</span>
-					</a>
+					</button>
 				</div>
 			</Page>
 		</BookComponent>
 	</div>
 </div>
+
+<TextbookModal isOpen={showBasicKnowledgeModal} skillId="basic.knowledge" onClose={() => { showBasicKnowledgeModal = false; }} />
 
 <style>
 	.lesson-container {
@@ -401,6 +406,28 @@
 
 	.oops {
 		font-size: 2.3rem;
+	}
+
+	:global(.skill-gated-text) {
+		display: block;
+		padding: 1rem;
+		margin-top: 1rem;
+		border-left: 4px solid #d4a574;
+		background-color: rgba(212, 165, 116, 0.05);
+		border-radius: 4px;
+	}
+
+	:global(.skill-gated-text) h4 {
+		margin-top: 0;
+		color: #2a6b48;
+	}
+
+	:global(.skill-gated-text) p {
+		margin: 0.8rem 0;
+	}
+
+	:global(.skill-gated-text) code {
+		font-size: 1rem;
 	}
 		
 

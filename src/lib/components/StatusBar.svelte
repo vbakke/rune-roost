@@ -7,13 +7,15 @@
 	import type { SkillId } from '$lib/skills/skillTree.data';
 	import SkillTreeIcon from './icons/SkillTreeIcon.svelte';
 	import BookIcon from './icons/BookIcon.svelte';
-	import RavenIcon from './icons/RavenIcon.svelte';
 	import DiceIcon from './icons/DiceIcon.svelte';
     import { prefNow } from '$lib/utils/utils.ts';
 
 	let stats = $derived(calculateSkillStats($learnedSkills));
 	let isLearningPage = $derived($page.url.pathname.startsWith('/lær'));
 	let flashAlphabet = $state(false);
+	
+	// Hide StatusBar until at least one meaningful skill is learned (not just encoding.roman)
+	let hasLearnedSkill = $derived($learnedSkills.size > 1 || ($learnedSkills.size === 1 && !$learnedSkills.has('encoding.roman')));
 	
 	const allAlphabets: { value: AlphabetType; label: string; skillId: SkillId }[] = [
 		{ value: 'ROMAN', label: 'Roman', skillId: 'encoding.roman' },
@@ -74,6 +76,7 @@
 	});
 </script>
 
+{#if hasLearnedSkill}
 <div class="status-bar">
 	<div class="status-bar-content">
 		<!-- Left section: Navigation links -->
@@ -87,11 +90,12 @@
 				<DiceIcon />
 				<span class="nav-label">Training</span>
 			</a>
-			
-			<a href="/lær/beginning" class="nav-link book-link" title="Books of Learning" data-testid="learn-button">
+						
+			<a href="/lær" class="nav-link book-link" title="Library of Learning" data-testid="learn-button">
 				<BookIcon open={isLearningPage} />
-				<span class="nav-label">Learn</span>
+				<span class="nav-label">Knowledge</span>
 			</a>
+
 		</div>
 
 		<!-- Center section: Stats -->
@@ -423,3 +427,4 @@
 		}
 	}
 </style>
+{/if}
