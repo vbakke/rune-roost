@@ -13,11 +13,11 @@ export const skillTree = {
         },
         'encoding.decimal': {
             label: 'Decimal numbers',
-            dependsOn: ['encoding.latin']
+            dependsOn: ['encoding.roman']
         },
         'encoding.ascii': {
             label: 'ASCII',
-            dependsOn: ['encoding.latin']
+            dependsOn: ['encoding.roman']
         },
         'encoding.bytes': {
             label: 'Bytes',
@@ -37,10 +37,14 @@ export const skillTree = {
         }
     },
     basic: {
-        'basic.knowledge': {
+        'basic.intro': {
             label: 'Basic knowledge',
             description: 'Learn the distinctions.'
         },
+        'basic.caesar': {
+            label: 'Caesar Cipher',
+            description: 'Learn about the simple substitution cipher.'
+        }
     },
     symmetric: {
         'sym.encrypt': {
@@ -48,7 +52,7 @@ export const skillTree = {
         },
         'sym.decrypt': {
             label: 'Decrypt',
-            dependsOn: ['basic.knowledge'],
+            dependsOn: ['basic.caesar'],
         },
         'sym.block_size': {
             label: 'Block size',

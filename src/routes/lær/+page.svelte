@@ -11,7 +11,7 @@
 	let showTextbookModal = $state(false);
 
 	// Available textbooks to display
-	const availableTextbooks: SkillId[] = ['basic.knowledge', 'sym.decrypt', 'asym.decrypt', 'hashing.overview'];
+	const availableTextbooks: SkillId[] = ['basic.intro', 'sym.decrypt', 'asym.decrypt', 'hashing.overview'];
 
 	function openTextbook(skillId: SkillId) {
 		selectedTextbook = skillId;

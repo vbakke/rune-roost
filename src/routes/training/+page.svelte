@@ -43,6 +43,13 @@
 	let showAsymmetricDecryptModal = $state(false);
 	let showHashingOverviewModal = $state(false);
 
+	// Auto-open BasicKnowledge modal if skill not yet learned
+	$effect(() => {
+		if (!$learnedSkills.has('basic.intro')) {
+			showBasicKnowledgeModal = true;
+		}
+	});
+
 	// Get alphabet from global appState (reactive to changes in StatusBar)
 	let alphabet = $derived(
 		$appState.selectedAlphabet === 'LATIN' 
@@ -303,7 +310,7 @@
 </div>
 
 <!-- Textbook Modals -->
-<TextbookModal isOpen={showBasicKnowledgeModal} skillId="basic.knowledge" onClose={() => { showBasicKnowledgeModal = false; }} />
+<TextbookModal isOpen={showBasicKnowledgeModal} skillId="basic.intro" onClose={() => { showBasicKnowledgeModal = false; }} />
 <TextbookModal isOpen={showSymmetricDecryptModal} skillId="sym.decrypt" onClose={() => { showSymmetricDecryptModal = false; }} />
 <TextbookModal isOpen={showAsymmetricDecryptModal} skillId="asym.decrypt" onClose={() => { showAsymmetricDecryptModal = false; }} />
 <TextbookModal isOpen={showHashingOverviewModal} skillId="hashing.overview" onClose={() => { showHashingOverviewModal = false; }} />

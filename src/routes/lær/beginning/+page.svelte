@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import BookComponent from '$lib/components/BookComponent.svelte';
 	import Page from '$lib/components/Page.svelte';
 	import LearnCoin from '$lib/components/LearnCoin.svelte';
 	import RavenIcon from '$lib/components/icons/RavenIcon.svelte';
-	import TextbookModal from '$lib/components/TextbookModal.svelte';
 
 	import { learnedSkills } from '$lib/skills/learnedSkills';
 	import { alphabetLearning } from '$lib/stores/alphabetLearning';
@@ -19,7 +19,6 @@
 
 	let currentPage = $state(0);
 	let secretKey: number = $state(7);
-	let showBasicKnowledgeModal = $state(false);
 	let alphabetFlash = $state(false);
 	let previousAlphabet = $state('');
 	let previousSelectedAlphabet = $state($appState.selectedAlphabet);
@@ -213,7 +212,7 @@
 					Let's dive into the confusion:<br/>
 				</p>
 				<div class="mid">
-					<button class="lesson-button" onclick={() => { showBasicKnowledgeModal = true; }}>
+					<button class="lesson-button" onclick={() => { goto('/training'); }}>
 						<RavenIcon />
 						<span>Learn</span>
 					</button>
@@ -222,8 +221,6 @@
 		</BookComponent>
 	</div>
 </div>
-
-<TextbookModal isOpen={showBasicKnowledgeModal} skillId="basic.knowledge" onClose={() => { showBasicKnowledgeModal = false; }} />
 
 <style>
 	.lesson-container {

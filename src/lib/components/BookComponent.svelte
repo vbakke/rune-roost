@@ -33,10 +33,16 @@
 				(page as HTMLElement).dataset.pageNumber = String(index + 1);
 				
 				// Add classes for visible pages
-				if (index === currentPage - 1) {
+				// For single-page books, always show on left side
+				if (pageCount === 1) {
 					page.classList.add('active-left');
-				} else if (index === currentPage) {
-					page.classList.add('active-right');
+				} else {
+					// Multi-page books: use two-column display
+					if (index === currentPage - 1) {
+						page.classList.add('active-left');
+					} else if (index === currentPage) {
+						page.classList.add('active-right');
+					}
 				}
 			});
 		}

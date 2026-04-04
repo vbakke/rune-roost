@@ -10,7 +10,7 @@ export interface TextbookEntry {
 }
 
 export const textbooks: Record<SkillId, TextbookEntry> = {
-	'basic.knowledge': {
+	'basic.intro': {
 		label: 'Basic Knowledge',
 		pages: [BasicKnowledge]
 	},
