@@ -311,7 +311,7 @@
 
 <!-- Textbook Modals -->
 <TextbookModal isOpen={showBasicKnowledgeModal} skillId="basic.intro" onClose={() => { showBasicKnowledgeModal = false; }} />
-<TextbookModal isOpen={showSymmetricDecryptModal} skillId="sym.decrypt" onClose={() => { showSymmetricDecryptModal = false; }} />
+<TextbookModal isOpen={showSymmetricDecryptModal} skillId="sym.decrypt.ceasar" onClose={() => { showSymmetricDecryptModal = false; }} />
 <TextbookModal isOpen={showAsymmetricDecryptModal} skillId="asym.decrypt.ceasar" onClose={() => { showAsymmetricDecryptModal = false; }} />
 <TextbookModal isOpen={showHashingOverviewModal} skillId="hashing.overview" onClose={() => { showHashingOverviewModal = false; }} />
 
