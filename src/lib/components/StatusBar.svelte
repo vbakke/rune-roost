@@ -14,9 +14,6 @@
 	let isLearningPage = $derived($page.url.pathname.startsWith('/lær'));
 	let flashAlphabet = $state(false);
 	
-	// Hide StatusBar until at least one meaningful skill is learned (not just encoding.roman)
-	let hasLearnedSkill = $derived($learnedSkills.size > 1 || ($learnedSkills.size === 1 && !$learnedSkills.has('encoding.roman')));
-	
 	const allAlphabets: { value: AlphabetType; label: string; skillId: SkillId }[] = [
 		{ value: 'ROMAN', label: 'Roman', skillId: 'encoding.roman' },
 		{ value: 'LATIN', label: 'Latin', skillId: 'encoding.latin' },
@@ -41,6 +38,10 @@
 	const encodings = $derived(
 		allEncodings.filter(encoding => !encoding.skillId || $learnedSkills.has(encoding.skillId))
 	);
+
+	// Hide StatusBar until at least one meaningful skill is learned (not just encoding.roman)
+	let hasLearnedSkill = $derived(alphabets.length > 1 || encodings.length > 1);	
+
 
 	// Watch for newly learned alphabets
 	$effect(() => {

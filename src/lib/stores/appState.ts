@@ -13,7 +13,7 @@ interface AppState {
 const initialState: AppState = {
     selectedAlphabet: 'ROMAN',
     selectedEncoding: 'PLAIN',
-    learnedSkills: new Set()
+    learnedSkills: new Set(['encoding.roman'])
 };
 
 // Load from localStorage if available (browser only)

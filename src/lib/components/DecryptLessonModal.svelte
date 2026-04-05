@@ -58,8 +58,8 @@
 
 		// Give the animation time to complete before marking as learned
 		setTimeout(() => {
-			console.log(`${prefNow()} Marking sym.decrypt as learned`);
-			learnedSkills.add('sym.decrypt');
+			console.log(`${prefNow()} Marking sym.decrypt.ceasar as learned`);
+			learnedSkills.add('sym.decrypt.ceasar');
 
 			// Close the modal after the animation completes
 			setTimeout(() => {

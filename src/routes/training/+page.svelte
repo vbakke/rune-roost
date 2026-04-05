@@ -30,11 +30,11 @@
 	import { onMount } from 'svelte';
 
 	let showSymmetricDecrypt = $derived(
-		$learnedSkills.has('sym.decrypt')
+		$learnedSkills.has('sym.decrypt.ceasar')
 	);
 
 	let showAsymmetricDecrypt = $derived(
-		$learnedSkills.has('asym.decrypt')
+		$appState.learnedSkills.has('asym.decrypt.ceasar')
 	);
 
 	// Textbook modal states
@@ -312,7 +312,7 @@
 <!-- Textbook Modals -->
 <TextbookModal isOpen={showBasicKnowledgeModal} skillId="basic.intro" onClose={() => { showBasicKnowledgeModal = false; }} />
 <TextbookModal isOpen={showSymmetricDecryptModal} skillId="sym.decrypt" onClose={() => { showSymmetricDecryptModal = false; }} />
-<TextbookModal isOpen={showAsymmetricDecryptModal} skillId="asym.decrypt" onClose={() => { showAsymmetricDecryptModal = false; }} />
+<TextbookModal isOpen={showAsymmetricDecryptModal} skillId="asym.decrypt.ceasar" onClose={() => { showAsymmetricDecryptModal = false; }} />
 <TextbookModal isOpen={showHashingOverviewModal} skillId="hashing.overview" onClose={() => { showHashingOverviewModal = false; }} />
 
 <!-- Decryption Lesson Modal -->

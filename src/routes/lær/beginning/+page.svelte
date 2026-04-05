@@ -115,9 +115,6 @@
 	}
 
 	onMount(() => {
-		// Mark encoding.roman as learned since this page teaches it
-		learnedSkills.add('encoding.roman');
-		
 		document.addEventListener('learn', handleLearnEvent as EventListener);
 		
 		return () => {
@@ -188,8 +185,8 @@
 					{/if}		
 				</div>
 
-				<LearnCoin topic="sym.decrypt" />
-				<div class:blur={!$learnedSkills.has('sym.decrypt')}>
+				<LearnCoin topic="sym.decrypt.ceasar" />
+				<div class:blur={!$learnedSkills.has('sym.decrypt.ceasar')}>
 					<h3>Decrypt</h3>
 					<p>To decrypt, we just reverse the operation:<br/>
 						<code>{decode(encrypt(encode(ABBA), secretKey))} ⊖ {secretKeyIdentifier(secretKey)} = {ABBA}</code> 

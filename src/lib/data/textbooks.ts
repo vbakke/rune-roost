@@ -14,11 +14,11 @@ export const textbooks: Record<SkillId, TextbookEntry> = {
 		label: 'Basic Knowledge',
 		pages: [BasicKnowledge]
 	},
-	'sym.decrypt': {
+	'sym.decrypt.ceasar': {
 		label: 'Symmetric Decryption',
 		pages: [SymmetricDecrypt]
 	},
-	'asym.decrypt': {
+	'asym.decrypt.ceasar': {
 		label: 'Asymmetric Decryption',
 		pages: [AsymmetricDecrypt]
 	},

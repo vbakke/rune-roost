@@ -47,16 +47,16 @@ export const skillTree = {
         }
     },
     symmetric: {
-        'sym.encrypt': {
+        'sym.encrypt.ceasar': {
             label: 'Encrypt'
         },
-        'sym.decrypt': {
+        'sym.decrypt.ceasar': {
             label: 'Decrypt',
-            dependsOn: ['basic.caesar'],
+            dependsOn: ['sym.encrypt.ceasar'],
         },
         'sym.block_size': {
             label: 'Block size',
-            dependsOn: ['sym.decrypt']
+            dependsOn: ['sym.decrypt.ceasar']
         },
         'sym.otp': {
             label: 'One-time pad',
@@ -64,7 +64,7 @@ export const skillTree = {
         },
         'sym.aes.encrypt': {
             label: 'Encrypt with AES',
-            dependsOn: ['sym.decrypt', 'encoding.bytes']
+            dependsOn: ['sym.decrypt.ceasar', 'encoding.bytes']
         },
         'sym.aes.decrypt': {
             label: 'Decrypt with AES',
@@ -72,21 +72,21 @@ export const skillTree = {
         }
     },
     asymmetric: {
-        'asym.encrypt.simple': {
+        'asym.encrypt.ceasar': {
             label: 'Encrypt'
         },
-        'asym.decrypt.simple': {
+        'asym.decrypt.ceasar': {
             label: 'Decrypt',
-            dependsOn: ['asym.encrypt.simple'],
+            dependsOn: ['asym.encrypt.ceasar'],
         },
         'asym.encrypt.num': {
             label: 'Encrypt numbers using RSA',
-            dependsOn: ['asym.decrypt.simple'],
+            dependsOn: ['asym.decrypt.ceasar'],
         },
         'asym.quantum': {
             label: 'Quantum attacks',
             description: 'Learn about how quantum computers can break RSA and other asymmetric encryption schemes.',
-            dependsOn: ['asym.decrypt.simple'],
+            dependsOn: ['asym.decrypt.ceasar'],
         },
     },
     hashing: {
