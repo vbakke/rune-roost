@@ -42,13 +42,13 @@ export class Message {
     }
 
     isDecimal(text: string): boolean {
-        return !!text.match(/^[0-9]+$/);
+        return !!text?.match(/^[0-9]+$/);
     }
     isHex(text: string) {
-        return !!text.match(/^[0-9a-fA-F]+$/);
+        return !!text?.match(/^[0-9a-fA-F]+$/);
     }
     isRoman(text: string) {
-        return !!text.match(`^[${Message.ROMAN_ALPHABET}]+$`);
+        return !!text?.match(`^[${Message.ROMAN_ALPHABET}]+$`);
     }
 
 

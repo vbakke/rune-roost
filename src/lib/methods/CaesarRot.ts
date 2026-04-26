@@ -10,7 +10,9 @@ export class CaesarRot
         return this.rotateString(input, secretKey, -1, alphabet);
     }
 
-    public static rotateString(input: string, secretKey: string, direction: number, alphabet:string = Message.ROMAN_ALPHABET): Message {
+    public static rotateString(input: string, secretKey: string, direction: number = +1, alphabet:string = Message.ROMAN_ALPHABET): Message {
+        if (!input || !secretKey) return new Message(input);
+
         let rotated: string = "";
         let keyIndex: number = 0;
         for (let char of input) {
@@ -20,11 +22,12 @@ export class CaesarRot
             } else {
                 index += alphabet.indexOf(secretKey[keyIndex]) * direction;
                 index = (index + alphabet.length) % alphabet.length;
-
+                
                 rotated += alphabet[index];
             }
             keyIndex = (keyIndex + 1) % secretKey.length;
         }
+        console.debug(`Rotating string "${input}" with secret key "${secretKey}" in alphabet "${alphabet}" with direction ${direction > 0 ? 'forward' : 'reverse'}: "${rotated}"`);
         return new Message(rotated);
     }
 

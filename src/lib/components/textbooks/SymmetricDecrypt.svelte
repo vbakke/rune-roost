@@ -1,9 +1,67 @@
+<script lang="ts">
+    import { Message } from '$lib/model/Message.svelte.ts';
+    import type { SecretKey } from '$lib/model/sym/SecretKey.svelte.ts';
+	import { SymCaesar } from '$lib/model/sym/SymCaesar';
+	import { learnedSkills } from '$lib/skills/learnedSkills';
+    import LearnCoin from '../LearnCoin.svelte';
+	
+
+	interface Props {
+		alphabet: string;
+		secretKey: SecretKey;
+	}
+
+	const ABBA: Message = new Message('ABBA');
+	const BOY: Message = new Message('BOY');
+	const A: Message = new Message('A');
+	
+	let { secretKey, alphabet }: Props = $props();
+	
+	let symmetricCipher = $derived(new SymCaesar(alphabet));
+</script>
 <div class="textbook-page">
-	<h2>Symmetric Decryption</h2>
+	<!-- <h2>Symmetric Decryption</h2>
 	<p>
 		In symmetric encryption, the same key is used for both encryption and decryption. When you encrypt a message
 		with a key, you can decrypt it using the <strong>exact same key</strong>.
-	</p>
+	</p> -->
+
+				<h3>Encrypt</h3>				
+				<p>
+					Let's (mis)use the symbol <ref name="circle_plus" class="non-italics">⊕</ref> <em>(a plus inside a circle)</em>
+					 to say how far we shift the alphabet. 
+					<!-- If we roll past 
+					<code>{alphabet.slice(-1)}</code> we continue on <code>{alphabet.slice(0, 1)}</code>. -->
+				</p>
+				<div class="hbox oops-box">
+					<p>Encrypting<br/>{ABBA}: <code>{ABBA} ⊕ {secretKey} = {symmetricCipher.encrypt(ABBA, secretKey)}</code> <br/>
+						And {BOY}: <code>{BOY} ⊕ {secretKey} = {symmetricCipher.encrypt(BOY, secretKey)}</code> <br/>
+					</p>			
+					{#if secretKey.toString() == 'A'}						
+					<span class="oops">
+						😱
+					</span>
+					{/if}		
+				</div>
+
+				<LearnCoin topic="sym.decrypt.ceasar" />
+				<div 
+					class:blur={!$learnedSkills.has('sym.decrypt.ceasar')}
+					class="pulsate"
+				>
+					<h3>Decrypt</h3>
+					<p>To decrypt, we  <em>reverse</em> the operation,<br/>
+						So <code>{symmetricCipher.encrypt(A, secretKey)}</code> → <code>A</code>, thus
+						<code>{symmetricCipher.encrypt(ABBA, secretKey)} ⊖ {secretKey} = {ABBA}</code> 
+
+					</p>
+					<p>
+						Use <em>the same</em> secret key.<br/>
+						But <em>reverse</em> the <em>operation</em>.<br/>
+					</p>
+				</div>
+
+
 
 	<!-- <h3>How It Works</h3>
 	<p>Let's walk through the process step by step:</p>
@@ -33,10 +91,10 @@
 
 <style>
 	.textbook-page {
-		padding: 24px;
+		/* padding: 24px;
 		font-family: serif;
 		line-height: 1.8;
-		color: #333;
+		color: #333; */
 	}
 
 	h2 {
@@ -48,12 +106,15 @@
 		padding-bottom: 12px;
 	}
 
-	h3 {
+	code {
+		font-size: 1.4em;
+	}
+	/* h3 {
 		font-size: 18px;
 		margin-top: 20px;
 		margin-bottom: 12px;
 		color: #2a6b48;
-	}
+	} */
 
 	p {
 		margin-bottom: 12px;

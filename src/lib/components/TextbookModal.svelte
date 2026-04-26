@@ -5,14 +5,16 @@
 	import { appState } from '$lib/stores/appState';
 	import { getTextbook } from '$lib/data/textbooks';
 	import type { SkillId } from '$lib/skills/skillTree.data';
+    import type { SecretKey } from '$lib/model/sym/SecretKey.svelte.ts';
 
 	interface Props {
 		isOpen: boolean;
 		skillId: SkillId;
+		secretKey?: SecretKey;
 		onClose?: () => void;
 	}
 
-	let { isOpen, skillId, onClose }: Props = $props();
+	let { isOpen, skillId, secretKey, onClose }: Props = $props();
 
 	let currentPage = $state(0);
 
@@ -32,7 +34,7 @@
 			<BookComponent bind:currentPage>
 				{#each textbook.pages as PageComponent, index}
 					<Page data-page-marker={`page-${index}`}>
-						<svelte:component this={PageComponent} />
+						<svelte:component this={PageComponent} {secretKey} />
 					</Page>
 				{/each}
 			</BookComponent>

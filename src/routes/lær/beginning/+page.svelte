@@ -13,15 +13,27 @@
     import { prefNow } from '$lib/utils/utils.ts';
     import ArrowLeftRune from '$lib/components/runes/ArrowLeftRune.svelte';
     import ArrowRightRune from '$lib/components/runes/ArrowRightRune.svelte';
+    import SymmetricDecrypt from '$lib/components/textbooks/SymmetricDecrypt.svelte';
+    import { SecretKey } from "$lib/model/sym/SecretKey.svelte.js";
+    import { CaesarRot } from '$lib/methods/CaesarRot.ts';
+    import { SymCaesar } from '$lib/model/sym/SymCaesar.ts';
 
+	const A: Message = new Message('A');
 	const ABBA: string = 'ABBA';
 	const BOY: string = 'BOY';
 
 	let currentPage = $state(0);
-	let secretKey: number = $state(7);
+	let secretKey: SecretKey = $state(new SecretKey($appState.selectedAlphabet, new Message('D')));
 	let alphabetFlash = $state(false);
-	let previousAlphabet = $state('');
+	let symmetricCipher = $derived(new SymCaesar());
 	let previousSelectedAlphabet = $state($appState.selectedAlphabet);
+	
+	// Watch for alphabet changes and preserve the key's position
+	$effect(() => {
+		if (previousSelectedAlphabet !== $appState.selectedAlphabet) {
+			secretKey.remapToAlphabet($appState.selectedAlphabet);
+		}
+	});
 	
 	// Use selected alphabet from appState, respecting which ones are learned
 	let alphabet: string = $derived(
@@ -48,8 +60,9 @@
 	});
 
 	function shift(direction: number) {
-		secretKey = (secretKey + direction + alphabet.length) % alphabet.length;
+		// secretKey_OBSOLETE = (secretKey_OBSOLETE + direction + alphabet.length) % alphabet.length;
 		shiftedAlphabet = shifted(alphabet);
+		secretKey.generateNextSecretKey(direction);
 	}
 
 	function encode(message: string): number[] {
@@ -78,6 +91,10 @@
 		return decoded;
 	}
 
+	function encryptStr(message: string, secretKey: number): string {
+		return decode(encrypt(encode(message), secretKey));
+	}
+
 	function encrypt(message: number[], secretKey: number): number[] {
 		let encrypted: number[] = [];
 		for (let num of message) {
@@ -88,11 +105,7 @@
 	}
 
 	function shifted(alphabet: string): string {
-		return (alphabet + alphabet).substr(secretKey, alphabet.length);
-	}
-
-	function secretKeyIdentifier(secretKey: number) {
-		return alphabet.substr(secretKey, 1);
+		return CaesarRot.rotateStringForward(alphabet, secretKey.key.plain, alphabet).plain;
 	}
 
 	function handleLearnEvent(event: CustomEvent) {
@@ -139,12 +152,13 @@
 				<h2>... well a bit later actually,</h2>
 				<p>
 					Julius Cæsar, as everyone knows, <em>"encrypted"</em> messages to his generals by 
-					<em>rotating</em> the alphabet.
+					<em>shifting</em> the letters, <br/>
+					i.e. <code>A</code> → <code>{symmetricCipher.encrypt(A, secretKey)}</code>.
 				</p>
 				<div class="alaphabet-rot">
 					<code class:flash-alphabet={alphabetFlash}>{ alphabet }</code>
 					<code class:flash-alphabet={alphabetFlash}>{ shiftedAlphabet }</code>
-					<span class="secret-key">secret key:<br/><code>{ secretKeyIdentifier(secretKey) }</code></span>
+					<span class="secret-key">secret key:<br/><code>{ secretKey }</code></span>
 					<div class="buttons">
 						<button class="book-button" onclick={(e) => { e.preventDefault(); e.stopPropagation(); shift(+1); }}>
 							<ArrowLeftRune />
@@ -155,11 +169,17 @@
 					</div>
 				</div>
 
+				<p> 
+					Changing the <ref name="secret-key">secret key</ref> changes the <em>shift</em>, thus changing the encrypted message.
+				</p>
+				<!-- <p>
+					Cæsar could change the <ref name="secret-key">secret key</ref>
+				</p>
 				<p>
 					Since this method  requires a <ref name="secret-key">secret keys</ref>,
 					it is possible to define this as <ref name="encryption">encryption</ref>,
 					and not just an <ref name="encoding">encoding</ref>.
-				</p>
+				</p> -->
 				
 				{#if alphabet.length == 23}
 				<p><i>(Note. Julius had only 23 letters in his alphabet)</i><LearnCoin topic="encoding.latin" /></p>
@@ -168,17 +188,21 @@
 			</Page>
 
 			<Page>
+				<SymmetricDecrypt secretKey={secretKey} />
+			</Page>
+
+
+			<!-- <Page>
 				<h3>Encrypt</h3>				
 				<p>
-					Let's (mis)use <ref name="circle_plus" class="non-italics">⊕</ref> as a 
-					<em>"rollover addition"</em> to mean if we roll past 
-					<code>{alphabet.slice(-1)}</code> we continue on <code>{alphabet.slice(0, 1)}</code>.
+					Let's (mis)use the symbol <ref name="circle_plus" class="non-italics">⊕</ref> <em>(a plus inside a circle)</em>
+					 to say how far we shift the alphabet. 
 				</p>
 				<div class="hbox oops-box">
-					<p>Encrypting<br/>{ABBA}: <code>{ABBA} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(ABBA), secretKey))}</code> <br/>
-						And {BOY}: <code>{BOY} ⊕ {secretKeyIdentifier(secretKey)} = {decode(encrypt(encode(BOY), secretKey))}</code> <br/>
+					<p>Encrypting<br/>{ABBA}: <code>{ABBA} ⊕ {secretKeyIdentifier(secretKey_OBSOLETE)} = {encryptStr(ABBA, secretKey_OBSOLETE)}</code> <br/>
+						And {BOY}: <code>{BOY} ⊕ {secretKeyIdentifier(secretKey_OBSOLETE)} = {encryptStr(BOY, secretKey_OBSOLETE)}</code> <br/>
 					</p>			
-					{#if secretKey == 0}						
+					{#if secretKey_OBSOLETE == 0}						
 					<span class="oops">
 						😱
 					</span>
@@ -186,16 +210,21 @@
 				</div>
 
 				<LearnCoin topic="sym.decrypt.ceasar" />
-				<div class:blur={!$learnedSkills.has('sym.decrypt.ceasar')}>
+				<div 
+					class:blur={!$learnedSkills.has('sym.decrypt.ceasar')}
+					class="pulsate"
+				>
 					<h3>Decrypt</h3>
-					<p>To decrypt, we just reverse the operation:<br/>
-						<code>{decode(encrypt(encode(ABBA), secretKey))} ⊖ {secretKeyIdentifier(secretKey)} = {ABBA}</code> 
+					<p>To decrypt, we  <em>reverse</em> the operation,<br/>
+						So <code>{encryptStr('A', secretKey_OBSOLETE)}</code> → <code>A</code>, thus
+						<code>{decode(encrypt(encode(ABBA), secretKey_OBSOLETE))} ⊖ {secretKeyIdentifier(secretKey_OBSOLETE)} = {ABBA}</code> 
 					</p>
-					<p>Reverse <em>the operation</em>.<br/>
-						But use <em>the same secret key</em>.
+					<p>
+						Use <em>the same</em> secret key.<br/>
+						But <em>reverse</em> the <em>operation</em>.<br/>
 					</p>
 				</div>
-			</Page>
+			</Page> -->
 
 			<Page>
 				<h3>Three topics</h3>
@@ -352,6 +381,7 @@
 		}
 	}
 	
+
 	.alaphabet-rot .buttons {
 		margin-top: 0.3rem;
 	}

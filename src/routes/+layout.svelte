@@ -19,9 +19,14 @@
 </svelte:head>
 <style>
 	:global(.blur) {
-		filter: blur(6px);
-		pointer-events: none;
+		/* pointer-events: none; */
 		user-select: none;
+	}
+	:global(.blur) :global(h3) {
+		filter: blur(2.5px);
+	}
+	:global(.blur) :global(p) {
+		filter: blur(6px);
 	}
 	:global(.unblur) {
 		filter: blur(0);

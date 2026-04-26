@@ -4,6 +4,7 @@
 	import { calculateSkillStats, getCategoryIcon, getCategoryColor, getCategoryLabel } from '$lib/skills/skillStats';
 	import { appState, type AlphabetType, type EncodingType } from '$lib/stores/appState';
 	import { alphabetLearning } from '$lib/stores/alphabetLearning';
+	import { encodingLearning } from '$lib/stores/encodingLearning';
 	import type { SkillId } from '$lib/skills/skillTree.data';
 	import SkillTreeIcon from './icons/SkillTreeIcon.svelte';
 	import BookIcon from './icons/BookIcon.svelte';
@@ -13,6 +14,7 @@
 	let stats = $derived(calculateSkillStats($learnedSkills));
 	let isLearningPage = $derived($page.url.pathname.startsWith('/lær'));
 	let flashAlphabet = $state(false);
+	let flashEncoding = $state(false);
 	
 	const allAlphabets: { value: AlphabetType; label: string; skillId: SkillId }[] = [
 		{ value: 'ROMAN', label: 'Roman', skillId: 'encoding.roman' },
@@ -42,39 +44,39 @@
 	// Hide StatusBar until at least one meaningful skill is learned (not just encoding.roman)
 	let hasLearnedSkill = $derived(alphabets.length > 1 || encodings.length > 1);	
 
-
 	// Watch for newly learned alphabets
 	$effect(() => {
 		if ($alphabetLearning.newlyLearnedAlphabet && $alphabetLearning.flashAlphabet) {
-			// Flash the dropdown for 1 second (3 flashes)
-			console.log(`${prefNow()}: Detected newly learned alphabet ${$alphabetLearning.newlyLearnedAlphabet}, triggering flash`);	
+			console.log(`${prefNow()}: Detected newly learned alphabet ${$alphabetLearning.newlyLearnedAlphabet}, triggering flash`);
 			flashAlphabet = true;
-			
-			// Stop flashing and switch to newly learned alphabet after 1 second
-			const flashTimer = setTimeout(() => {
-				console.log(`${prefNow()}: Flash complete, switching to ${$alphabetLearning.newlyLearnedAlphabet}`);
-				flashAlphabet = false;
-				alphabetLearning.clearFlash();
-				
-				if ($alphabetLearning.newlyLearnedAlphabet) {
-					console.log(`${prefNow()}: Setting alphabet to newly learned ${$alphabetLearning.newlyLearnedAlphabet}`);
-					appState.setAlphabet($alphabetLearning.newlyLearnedAlphabet);
-				}
-			}, 1000);
-			
-			// Clear the learning state 300ms after flash ends (total 1300ms)
-			const clearTimer = setTimeout(() => {
-				console.log(`${prefNow()}: Clearing newly learned alphabet state for ${$alphabetLearning.newlyLearnedAlphabet}`);
-				alphabetLearning.clear();
-			}, 1300);
-			
-			// Cleanup timers if effect re-runs or component unmounts
-			return () => {
-				clearTimeout(flashTimer);
-				clearTimeout(clearTimer);
-			};
 		}
 	});
+
+	// Watch for newly learned encodings
+	$effect(() => {
+		if ($encodingLearning.newlyLearnedEncoding && $encodingLearning.flashEncoding) {
+			console.log(`${prefNow()}: Detected newly learned encoding ${$encodingLearning.newlyLearnedEncoding}, triggering flash`);
+			flashEncoding = true;
+		}
+	});
+
+	// Handle alphabet dropdown change
+	const handleAlphabetChange = (e: Event) => {
+		const target = e.currentTarget as HTMLSelectElement;
+		console.log(`${prefNow()}: Alphabet changed to ${target.value}, stopping flash`);
+		flashAlphabet = false;
+		alphabetLearning.clear();
+		appState.setAlphabet(target.value as AlphabetType);
+	};
+
+	// Handle encoding dropdown change
+	const handleEncodingChange = (e: Event) => {
+		const target = e.currentTarget as HTMLSelectElement;
+		console.log(`${prefNow()}: Encoding changed to ${target.value}, stopping flash`);
+		flashEncoding = false;
+		encodingLearning.clear();
+		appState.setEncoding(target.value as EncodingType);
+	};
 </script>
 
 {#if hasLearnedSkill}
@@ -134,7 +136,7 @@
 					class:flash={flashAlphabet}
 					disabled={alphabets.length <= 1}
 					value={$appState.selectedAlphabet}
-					onchange={(e) => appState.setAlphabet(e.currentTarget.value as AlphabetType)}
+					onchange={handleAlphabetChange}
 				>
 					{#each alphabets as alphabet}
 						<option value={alphabet.value}>{alphabet.label}</option>
@@ -146,9 +148,10 @@
 				<label for="encoding-select">Encoding:</label>
 				<select 
 					id="encoding-select"
+					class:flash={flashEncoding}
 					disabled={encodings.length <= 1}
 					value={$appState.selectedEncoding}
-					onchange={(e) => appState.setEncoding(e.currentTarget.value as EncodingType)}
+					onchange={handleEncodingChange}
 				>
 					{#each encodings as encoding}
 						<option value={encoding.value}>{encoding.label}</option>
@@ -355,7 +358,7 @@
 	}
 
 	.control-group select.flash {
-		animation: flash-select 1s ease-in-out;
+		animation: flash-select 1s ease-in-out infinite;
 	}
 
 	@keyframes flash-select {

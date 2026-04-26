@@ -10,8 +10,6 @@
 	import DecryptLessonModal from '$lib/components/DecryptLessonModal.svelte';
 	import TextbookModal from '$lib/components/TextbookModal.svelte';
 	import { Message } from '$lib/model/Message.svelte';
-	import type { SymmetricEncryption } from '$lib/model/sym/SymmetricEncryption';
-	import type { AsymmetricEncryption } from '$lib/model/asym/AsymmetricCertificate';
 	import { AsymCaesarRot } from '$lib/model/asym/AsymCaesarRot';
 	import { AsymCaesarRotCertificate } from '$lib/model/asym/AesCaesarRotCertificate.svelte';
 	import { SymCaesar } from '$lib/model/sym/SymCaesar';
@@ -63,22 +61,23 @@
 	// 3. Derived MessageModel (auto-creates when userInput changes)
 	let message = $derived(new Message(userInput));
 
-	// 4. Keys are now reactive to alphabet changes
+	// 4. Create key|certificate that updates when alphabet changes
 	let symmetricKey = $derived.by(() => {
-		const key = new SecretKey(alphabet);
-		let asymCert = new AsymCaesarRotCertificate(alphabet);
-		while (key.key.plain === asymCert.publicKey.plain) {
-			key.generateKey();
-		}
-		return key;
+		return new SecretKey(alphabet);
 	});
 
 	let asymmetricCert = $derived.by(() => {
-		return new AsymCaesarRotCertificate(alphabet);
+		let asymCert = new AsymCaesarRotCertificate(alphabet);
+		// Avoid public Key being equal to secret Key, initially
+		while (symmetricKey.key.plain === asymCert.publicKey.plain) {
+			asymCert.generateKeyPair();
+		}
+		return asymCert;
+
 	});
 
 	// 5. Encryption algorithms (recreate when alphabet changes to use correct alphabet)
-	let symmetricCipher = $derived.by(() => new SymCaesar());
+	let symmetricCipher = $derived.by(() => new SymCaesar(alphabet));
 	let asymmetricCipher = $derived.by(() => new AsymCaesarRot(alphabet));
 	
 	// 6. Derived encrypted results (auto-update when message changes)
@@ -311,7 +310,7 @@
 
 <!-- Textbook Modals -->
 <TextbookModal isOpen={showBasicKnowledgeModal} skillId="basic.intro" onClose={() => { showBasicKnowledgeModal = false; }} />
-<TextbookModal isOpen={showSymmetricDecryptModal} skillId="sym.decrypt.ceasar" onClose={() => { showSymmetricDecryptModal = false; }} />
+<TextbookModal isOpen={showSymmetricDecryptModal} skillId="sym.decrypt.ceasar" onClose={() => { showSymmetricDecryptModal = false; }} secretKey={symmetricKey} />
 <TextbookModal isOpen={showAsymmetricDecryptModal} skillId="asym.decrypt.ceasar" onClose={() => { showAsymmetricDecryptModal = false; }} />
 <TextbookModal isOpen={showHashingOverviewModal} skillId="hashing.overview" onClose={() => { showHashingOverviewModal = false; }} />
 
